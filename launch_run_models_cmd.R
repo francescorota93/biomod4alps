@@ -1,4 +1,9 @@
-#setwd("/home/lv71284/g_genova/data/")
+if(!interactive){
+  setwd("/home/lv71284/g_genova/data/")
+}else{
+  setwd("/data/OneDrive/01_PhD/05_projects/boimod2/")  
+  }
+
 library(biomod2)
 library(raster)
 library(rgdal)
