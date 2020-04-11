@@ -21,7 +21,7 @@ source("biomod4alps/run_biomod_models_current.R")
 source("biomod4alps/run_biomod_models_future.R")
 ####################################
 # choose species (numeric vector)
-species = c(1,4)
+species = c(3:4)
 
 # loading species occurrences data
 s <- read.table("endemic_dolo50.txt", head = TRUE, sep = "\t")
