@@ -11,4 +11,4 @@
 module purge
 module load intel/18 intel-mkl/2018 R/3.6.2 gdal/2.4.1 proj/4.9.3
 
-Rscript $HOME/data/script/launch_run_models_cmd.R CTA 4
+Rscript $HOME/data/biomod4alps/launch_run_models_cmd.R CTA 4
