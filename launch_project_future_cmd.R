@@ -19,15 +19,20 @@ env_predictors_dir = paste0(getwd(),"/env_predictors/climate/future/")
 lf<-list.files(path = env_predictors_dir)
 # choose future env variables
 future_pred = 1:length(lf)
+
 #####################################
 # model options
 
 if(!interactive()){
   args = commandArgs(trailingOnly=TRUE)
-  n_cores = as.numeric(args[1])
+  model =  args[1]
+  n_cores = as.numeric(args[2])
+  if(model=="all"){model = c("GLM","GAM","RF","GBM","CTA")}
 }else {
+  model = "RF"
   n_cores = 2
 }
+
 
 out_dir = paste0(getwd(),"/models_future")
 if(!dir.exists(out_dir)){dir.create(out_dir)}
@@ -44,6 +49,7 @@ rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
 tmpDir()
 
 models_rds = list.files(path = "models_rds" , pattern = ".rds",full.names = T)
+if(model!="all"){models_rds = models_rds[grep(pattern = model,x = models_rds)]}
 
 ## do the job - future projections
 models_future = foreach(k = future_pred) %:%

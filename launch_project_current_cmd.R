@@ -10,11 +10,15 @@ library(doParallel)
 library(foreach)
 source("biomod4alps/run_biomod_models_current.R")
 
-
+#####################################
+# model options
 if(!interactive()){
   args = commandArgs(trailingOnly=TRUE)
-  n_cores = as.numeric(args[1])
+  model =  args[1]
+  n_cores = as.numeric(args[2])
+  if(model=="all"){model = c("GLM","GAM","RF","GBM","CTA")}
 }else {
+  model = "RF"
   n_cores = 2
 }
 
@@ -42,6 +46,7 @@ rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
 tmpDir()
 
 models_rds = list.files(path = "models_rds" , pattern = ".rds",full.names = T)
+if(model!="all"){models_rds = models_rds[grep(pattern = model,x = models_rds)]}
 
 ## do the job - current projections
 models_current = foreach(mod = models_rds) %dopar% {
