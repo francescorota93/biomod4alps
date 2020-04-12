@@ -1,8 +1,5 @@
-build_biomod_models = function(i,model,s,t,#s,#sp.names,
+build_biomod_models = function(i,model,s,t,
                                cur,
-                               PA.nb.rep = 10,
-                               PA.nb.absences = 1000,
-                               PA.strategy = 'random',
                                write_models_rds = TRUE){
   
   

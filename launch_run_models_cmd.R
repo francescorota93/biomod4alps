@@ -70,9 +70,6 @@ models = foreach(i = species) %dopar% {
                       #sp.names = sp.names,
                       cur = cur,
                       #out_dir = out_dir,
-                      PA.nb.rep = PA.nb.rep,
-                      PA.nb.absences = PA.nb.absences,
-                      PA.strategy = PA.strategy,
                       write_models_rds = FALSE)
 }
 

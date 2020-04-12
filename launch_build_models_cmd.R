@@ -60,9 +60,6 @@ models = foreach(i = species) %:%
                         s = s,
                         t = t,
                         cur = cur,
-                        PA.nb.rep = PA.nb.rep,
-                        PA.nb.absences = PA.nb.absences,
-                        PA.strategy = PA.strategy,
                         write_models_rds = TRUE)
   }
 
