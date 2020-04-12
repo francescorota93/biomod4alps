@@ -26,5 +26,7 @@ run_biomod_models_current = function(myBiomodModelOut,cur,t) {
     compress = 'FALSE',
     build.clamping.mask = F)
   
+  rm(myBiomodProj,cn) # to save memory
+  
   return(paste0(spname,"_done"))
 }

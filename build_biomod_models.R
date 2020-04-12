@@ -99,6 +99,8 @@ build_biomod_models = function(i,model,s,t,#s,#sp.names,
   nome5<-paste(getwd(),"/eval/",model,"_FAR_", sp.names[i], ".txt", sep="")
   write.table(o2, file=nome5, sep="\t")
   
+  rm(myBiomodData) # to save memory
+  
   return(myBiomodModelOut)
   
 }

@@ -18,6 +18,7 @@ run_biomod_models_future = function(myBiomodModelOut,k,t,lf,env_predictors_dir) 
   t1 <- subset(t, t[,1]==spname)
   t2 <- extent(t1[1,2], t1[1,3], t1[1,4], t1[1,5])
   fn  <- crop(fut, t2)
+  rm(fut) # to save memory
   fn<- stack(fn)
   print(paste("done cropping",spname,model))
   # 5. Individual models projections on future environmental conditions
@@ -30,6 +31,8 @@ run_biomod_models_future = function(myBiomodModelOut,k,t,lf,env_predictors_dir) 
     binary.meth = NULL,
     compress = 'FALSE',
     build.clamping.mask = F)
+  
+  rm(myBiomodProj,fn) # to save memory
   
   return(paste0(spname,"_",name,"_done"))
 }
