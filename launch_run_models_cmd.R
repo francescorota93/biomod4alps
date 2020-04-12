@@ -75,7 +75,10 @@ setwd(out_dir)
 registerDoParallel(cores = n_cores)
 #getDoParWorkers()
 
-rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),maxmemory = 3e+09)
+rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
+              maxmemory = 4.9e+09,
+              memfrac = (1/n_cores)*0.8
+              )
 #raster::tmpDir(create = TRUE)
 tmpDir()
 
@@ -94,6 +97,7 @@ models = foreach(i = species) %dopar% {
                       PA.strategy = PA.strategy)
 }
 
+unlink(tmpDir(), recursive=T, force=FALSE)
 
 registerDoParallel(cores = n_cores)
 
@@ -106,6 +110,8 @@ models_current = foreach(mod = models) %dopar% {
 }
 
 models_current
+
+unlink(tmpDir(), recursive=T, force=FALSE)
 
 rm(cur) # to save some memory
 
