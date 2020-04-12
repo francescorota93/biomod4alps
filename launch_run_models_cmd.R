@@ -75,7 +75,7 @@ setwd(out_dir)
 registerDoParallel(cores = n_cores)
 #getDoParWorkers()
 
-rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"))
+rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),maxmemory = 3e+09)
 #raster::tmpDir(create = TRUE)
 tmpDir()
 
