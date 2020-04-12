@@ -8,7 +8,7 @@ build_biomod_models = function(i,model,s,t,
     PA.nb.absences = 1000
     PA.strategy = "random"
     
-  }else if(model %in% c("RF","GMB","CTA")){
+  }else if(model %in% c("RF","GBM","CTA")){
     PA.nb.rep = 10
     PA.nb.absences = "stratified"
     PA.strategy = "sre"
