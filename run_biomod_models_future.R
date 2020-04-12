@@ -1,10 +1,12 @@
-run_biomod_models_future = function(myBiomodModelOut,k,t,lf,env_predictors_dir) {
+run_biomod_models_future = function(myBiomodModelOut,k,t,lf,
+                                    env_predictors_dir,read_from_file = TRUE) {
   
   #browser()
-  # loading species occurances data
-  spname = sub("[.]","_",myBiomodModelOut@sp.name)
-  spname = sub("\\..*","",spname) # the species name with underscore "_" in the name
+  if(read_from_file){myBiomodModelOut = readRDS(myBiomodModelOut)}
   
+  name_model = unlist(strsplit(x = myBiomodModelOut@sp.name,split = "[.]"))
+  spname = paste0(name_model[1],"_",name_model[2])# the species name with underscore "_" in the name
+  model = name_model[3]
   ###########################################################################
   ###########################         FUTURE           ######################
   ###########################################################################

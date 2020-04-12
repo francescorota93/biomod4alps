@@ -6,15 +6,7 @@ if(!interactive()){
 
 library(biomod2)
 library(raster)
-library(rgdal)
-library(gbm)
-library(mda)
-library(randomForest)
-library(Hmisc)
-library(plyr)
-library(maptools)
 library(doParallel)
-library(iterators)
 library(foreach)
 source("biomod4alps/build_biomod_models.R")
 source("biomod4alps/run_biomod_models_current.R")
@@ -50,30 +42,11 @@ if(!interactive()){
   n_cores = 2
 }
 
-if(model %in% c("GLM","GAM")){
-  PA.nb.rep = 10
-  PA.nb.absences = 1000
-  PA.strategy = "random"
-  
-}else if(model %in% c("RF","GMB","CTA")){
-  PA.nb.rep = 10
-  PA.nb.absences = "stratified"
-  PA.strategy = "sre"
-}
-
-if(PA.nb.absences!="stratified"){
-  PA.nb.absences = as.numeric(PA.nb.absences)
-}
-
 out_dir = paste0(getwd(),"/models_future")
 if(!dir.exists(out_dir)){dir.create(out_dir)}
 setwd(out_dir)
 #####################################
 
-# cl <- makeCluster(n_cores)
-# registerDoParallel(cl)
-registerDoParallel(cores = n_cores)
-#getDoParWorkers()
 
 rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
               maxmemory = 4.9e+09,
@@ -81,6 +54,11 @@ rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
               )
 #raster::tmpDir(create = TRUE)
 tmpDir()
+
+# cl <- makeCluster(n_cores)
+# registerDoParallel(cl)
+registerDoParallel(cores = n_cores)
+#getDoParWorkers()
 
 ## do the job - models
 models = foreach(i = species) %dopar% {
@@ -94,7 +72,8 @@ models = foreach(i = species) %dopar% {
                       #out_dir = out_dir,
                       PA.nb.rep = PA.nb.rep,
                       PA.nb.absences = PA.nb.absences,
-                      PA.strategy = PA.strategy)
+                      PA.strategy = PA.strategy,
+                      write_models_rds = FALSE)
 }
 
 unlink(tmpDir(), recursive=T, force=FALSE)
@@ -105,7 +84,8 @@ registerDoParallel(cores = n_cores)
 ## do the job - current projections
 models_current = foreach(mod = models) %dopar% {
   
-  run_biomod_models_current(myBiomodModelOut = mod,cur = cur,t = t)
+  run_biomod_models_current(myBiomodModelOut = mod,cur = cur,t = t,
+                            read_from_file = FALSE)
   
 }
 
@@ -123,7 +103,8 @@ models_future = foreach(k = future_pred) %:%
     
     run_biomod_models_future(myBiomodModelOut = mod,
                              k = k,t = t,lf = lf,
-                             env_predictors_dir = env_predictors_dir)
+                             env_predictors_dir = env_predictors_dir,
+                             read_from_file = FALSE)
   }
 
 models_future

@@ -1,9 +1,10 @@
 
-run_biomod_models_current = function(myBiomodModelOut,cur,t) {
-
-
-  spname = sub("[.]","_",myBiomodModelOut@sp.name)
-  spname = sub("\\..*","",spname)
+run_biomod_models_current = function(myBiomodModelOut,cur,t,read_from_file = TRUE) {
+  
+  if(read_from_file){myBiomodModelOut = readRDS(myBiomodModelOut)}
+  name_model = unlist(strsplit(x = myBiomodModelOut@sp.name,split = "[.]"))
+  spname = paste0(name_model[1],"_",name_model[2])# the species name with underscore "_" in the name
+  model = name_model[3]
   
   t1 <- subset(t, t[,1]==spname)
   t2 <- extent(t1[1,2], t1[1,3], t1[1,4], t1[1,5])
@@ -28,5 +29,5 @@ run_biomod_models_current = function(myBiomodModelOut,cur,t) {
   
   rm(myBiomodProj,cn) # to save memory
   
-  return(paste0(spname,"_done"))
+  return(paste0(spname,"_",model,"_current","_done"))
 }
