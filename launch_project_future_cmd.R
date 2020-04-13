@@ -27,8 +27,7 @@ if(!interactive()){
   args = commandArgs(trailingOnly=TRUE)
   model =  args[1]
   n_cores = as.numeric(args[2])
-  if(model=="all"){model = c("GLM","GAM","RF","GBM","CTA")}
-}else {
+  }else {
   model = "RF"
   n_cores = 2
 }
@@ -42,8 +41,8 @@ setwd(out_dir)
 registerDoParallel(cores = n_cores)
 
 rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
-              maxmemory = 4.9e+09,
-              memfrac = (1/n_cores)*0.8
+              maxmemory = 4.9e+09#,
+              #memfrac = (1/n_cores)*0.8
 )
 #raster::tmpDir(create = TRUE)
 tmpDir()

@@ -16,8 +16,7 @@ if(!interactive()){
   args = commandArgs(trailingOnly=TRUE)
   model =  args[1]
   n_cores = as.numeric(args[2])
-  if(model=="all"){model = c("GLM","GAM","RF","GBM","CTA")}
-}else {
+  }else {
   model = "RF"
   n_cores = 2
 }
