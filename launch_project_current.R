@@ -8,7 +8,7 @@ library(biomod2)
 library(raster)
 library(doParallel)
 library(foreach)
-source("biomod4alps/run_biomod_models_current.R")
+source("biomod4alps/project_current.R")
 
 #####################################
 # model options
@@ -50,7 +50,7 @@ if(model!="all"){models_rds = models_rds[grep(pattern = model,x = models_rds)]}
 ## do the job - current projections
 models_current = foreach(mod = models_rds) %dopar% {
   
-  run_biomod_models_current(myBiomodModelOut = mod,cur = cur,t = t,read_from_file = TRUE)
+  project_current(myBiomodModelOut = mod,cur = cur,t = t,read_from_file = TRUE)
   
 }
 

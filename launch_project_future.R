@@ -8,7 +8,7 @@ library(biomod2)
 library(raster)
 library(doParallel)
 library(foreach)
-source("biomod4alps/run_biomod_models_future.R")
+source("biomod4alps/project_future.R")
 ####################################
 # loading species extent
 t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
@@ -54,7 +54,7 @@ if(model!="all"){models_rds = models_rds[grep(pattern = model,x = models_rds)]}
 models_future = foreach(k = future_pred) %:%
   foreach(mod = models_rds) %dopar% {
     
-    run_biomod_models_future(myBiomodModelOut = mod,
+    project_future(myBiomodModelOut = mod,
                              k = k,t = t,lf = lf,
                              env_predictors_dir = env_predictors_dir,
                              read_from_file = TRUE)
