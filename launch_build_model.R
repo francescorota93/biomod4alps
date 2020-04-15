@@ -40,8 +40,8 @@ if(!dir.exists(out_dir)){dir.create(out_dir)}
 setwd(out_dir)
 #####################################
 rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
-              maxmemory = 4.9e+09,
-              memfrac = (1/n_cores)*0.8
+              maxmemory = 4.9e+09#,
+              #memfrac = (1/n_cores)*0.8
 )
 #raster::tmpDir(create = TRUE)
 tmpDir()
