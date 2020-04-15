@@ -3,3 +3,7 @@
 .RData
 .Ruserdata
 *.out
+/env_predictors
+/species
+endemic_dolo50.txt
+spec_extents.txt
