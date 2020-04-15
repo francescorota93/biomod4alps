@@ -1,20 +1,45 @@
-if(!interactive()){
-  args = commandArgs(trailingOnly=TRUE)
-  model =  args[1]
-  n_cores = as.numeric(args[2])
+if(interactive()){
   
-  user = "g_genova"
-  setwd(paste0("/home/lv71284/",user,"/data/"))
-  
-  source("biomod4alps/project_future.R")
-  
+  species = c(3,8)
+  model = c("RF","GAM")
+  n_cores = 2
+  outdir ="/models_future"
+  #setwd("/data/OneDrive/01_PhD/05_projects/boimod4alps/") 
+  source("project_future.R")
+ 
 }else{
   
-  model = "RF"
-  n_cores = 2
+  library(argparser)
+  p <- arg_parser("Get options for biomod models and projections")
+  p <- add_argument(parser = p,arg =  "--models", help="algorithms", nargs = Inf)
+  p <- add_argument(parser = p, arg = "--cores", help="number of cores", default=5, type = "numeric")
+  p <- add_argument(parser = p, arg = "--species", help="which species", nargs = Inf)
+  p <- add_argument(parser = p, arg = "--workdir", help="directory where input data is")
+  p <- add_argument(parser = p, arg = "--scriptdir", help="directory where script is")
+  p <- add_argument(parser = p, arg = "--outdir", help="directory to sotore output relative to workdir",
+                    default = "/models_future")
+  p <- add_argument(parser = p, arg = "--user", help="which user is running the job", default = "frota")
+  # Parse the command line arguments
+  argv <- parse_args(p)
   
-  #setwd("/data/OneDrive/01_PhD/05_projects/boimod4alps/")
-  source("project_future.R")
+  n_cores = argv$cores
+  user = argv$user
+  workdir = argv$workdir
+  outdir = argv$outdir
+  scriptdir = argv$scriptdir
+  
+  if(is.na(argv$models) | is.null(argv$models)){
+    model = c("GLM","GAM","RF","GBM","CTA")
+  }else {model = argv$models}
+  
+  if(is.na(argv$species) | is.null(argv$species)){
+    species = 1:8}else {species = as.numeric(argv$species)}
+  
+  setwd(workdir)
+  source(paste0(scriptdir,"/project_future.R"))
+  
+  model;species;n_cores;workdir;outdir;scriptdir;user
+  
 }
 
 library(biomod2)
@@ -25,7 +50,8 @@ library(foreach)
 ####################################
 # loading species extent
 t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
-
+s <- read.table("endemic_dolo50.txt", head = TRUE, sep = "\t")
+sp.names<-levels(factor(s[,1]))[species]
 #####################################
 # loading FUTURE list
 env_predictors_dir = paste0(getwd(),"/env_predictors/climate/future/")
@@ -35,7 +61,7 @@ future_pred = 1:length(lf)
 
 #####################################
 
-out_dir = paste0(getwd(),"/models_future")
+out_dir = paste0(getwd(),outdir)
 if(!dir.exists(out_dir)){dir.create(out_dir)}
 setwd(out_dir)
 #####################################
@@ -50,7 +76,8 @@ rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
 tmpDir()
 
 models_rds = list.files(path = "models_rds" , pattern = ".rds",full.names = T)
-if(model!="all"){models_rds = models_rds[grep(pattern = model,x = models_rds)]}
+models_rds = models_rds[grepl(pattern = paste(model,collapse = "|"),x = models_rds)]
+models_rds = models_rds[grepl(pattern = paste(sp.names,collapse = "|"),x = models_rds)]
 
 ## do the job - future projections
 models_future = foreach(k = future_pred) %:%

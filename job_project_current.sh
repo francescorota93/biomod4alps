@@ -11,4 +11,7 @@
 module purge
 module load intel/18 intel-mkl/2018 R/3.6.2 gdal/2.4.1 proj/4.9.3
 
-Rscript $HOME/data/biomod4alps/launch_project_current.R all 15
+## Rscript $HOME/data/biomod4alps/launch_project_current.R all 15
+
+Rscript $HOME/data/biomod4alps/launch_project_current.R --cores 15 --workdir $HOME/data/ --scriptdir $HOME/data/biomod4alps 
+## --species 8 --models RF
