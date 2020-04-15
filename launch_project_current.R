@@ -1,26 +1,28 @@
 if(!interactive()){
-  setwd("/home/lv71284/g_genova/data/")
+  args = commandArgs(trailingOnly=TRUE)
+  model =  args[1]
+  n_cores = as.numeric(args[2])
+  
+  user = "g_genova"
+  setwd(paste0("/home/lv71284/",user,"/data/"))
+  
+  source("biomod4alps/project_current.R")
+  
 }else{
-  setwd("/data/OneDrive/01_PhD/05_projects/boimod2/")  
+  
+  model = "RF"
+  n_cores = 2
+  
+  #setwd("/data/OneDrive/01_PhD/05_projects/boimod4alps/")  
+  source("project_current.R")
 }
 
 library(biomod2)
 library(raster)
 library(doParallel)
 library(foreach)
-source("biomod4alps/project_current.R")
 
 #####################################
-# model options
-if(!interactive()){
-  args = commandArgs(trailingOnly=TRUE)
-  model =  args[1]
-  n_cores = as.numeric(args[2])
-  }else {
-  model = "RF"
-  n_cores = 2
-}
-
 # species extents
 t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
 #####################################

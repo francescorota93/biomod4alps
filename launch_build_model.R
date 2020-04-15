@@ -1,17 +1,30 @@
 if(!interactive()){
-  setwd("/home/lv71284/g_genova/data/")
+  args = commandArgs(trailingOnly=TRUE)
+  model =  args[1]
+  n_cores = as.numeric(args[2])
+  if(model=="all"){model = c("GLM","GAM","RF","GBM","CTA")}
+  
+  user = "g_genova"
+  setwd(paste0("/home/lv71284/",user,"/data/"))
+  source("biomod4alps/build_model.R")
+  
 }else{
-  setwd("/data/OneDrive/01_PhD/05_projects/boimod2/")  
+  
+  model = c("RF")
+  n_cores = 2
+  
+  #setwd("/data/OneDrive/01_PhD/05_projects/boimod4alps/") 
+  source("build_model.R")
 }
 
 library(biomod2)
 library(raster)
 library(doParallel)
 library(foreach)
-source("biomod4alps/build_model.R")
+
 ####################################
 # choose species (numeric vector)
-species = c(3:4)
+species = c(3)
 
 # loading species occurrences data
 s <- read.table("endemic_dolo50.txt", head = TRUE, sep = "\t")
@@ -23,17 +36,6 @@ num_sp<-length(levels(factor(s[,1])))
 cur=stack(dir("env_predictors/climate/present", full.names=T))
 
 #####################################
-# model options
-
-if(!interactive()){
-  args = commandArgs(trailingOnly=TRUE)
-  model =  args[1]
-  n_cores = as.numeric(args[2])
-  if(model=="all"){model = c("GLM","GAM","RF","GBM","CTA")}
-}else {
-  model = c("GAM","RF")
-  n_cores = 2
-}
 
 out_dir = paste0(getwd(),"/models_future")
 if(!dir.exists(out_dir)){dir.create(out_dir)}

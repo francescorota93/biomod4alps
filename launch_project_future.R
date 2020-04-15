@@ -1,14 +1,27 @@
 if(!interactive()){
-  setwd("/home/lv71284/g_genova/data/")
+  args = commandArgs(trailingOnly=TRUE)
+  model =  args[1]
+  n_cores = as.numeric(args[2])
+  
+  user = "g_genova"
+  setwd(paste0("/home/lv71284/",user,"/data/"))
+  
+  source("biomod4alps/project_future.R")
+  
 }else{
-  setwd("/data/OneDrive/01_PhD/05_projects/boimod2/")  
+  
+  model = "RF"
+  n_cores = 2
+  
+  #setwd("/data/OneDrive/01_PhD/05_projects/boimod4alps/")
+  source("project_future.R")
 }
 
 library(biomod2)
 library(raster)
 library(doParallel)
 library(foreach)
-source("biomod4alps/project_future.R")
+
 ####################################
 # loading species extent
 t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
@@ -21,17 +34,6 @@ lf<-list.files(path = env_predictors_dir)
 future_pred = 1:length(lf)
 
 #####################################
-# model options
-
-if(!interactive()){
-  args = commandArgs(trailingOnly=TRUE)
-  model =  args[1]
-  n_cores = as.numeric(args[2])
-  }else {
-  model = "RF"
-  n_cores = 2
-}
-
 
 out_dir = paste0(getwd(),"/models_future")
 if(!dir.exists(out_dir)){dir.create(out_dir)}
