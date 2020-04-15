@@ -24,7 +24,7 @@ library(foreach)
 
 ####################################
 # choose species (numeric vector)
-species = c(3)
+species = c(3,4)
 
 # loading species occurrences data
 s <- read.table("endemic_dolo50.txt", head = TRUE, sep = "\t")
