@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J project_current
+#SBATCH -J future
 #SBATCH -N 1
 #SBATCH --partition=mem_0128
 #SBATCH --qos=normal_0128

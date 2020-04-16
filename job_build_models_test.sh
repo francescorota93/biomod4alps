@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J build_models_test
+#SBATCH -J test_build
 #SBATCH -N 1
 #SBATCH --partition=mem_0128
 #SBATCH --qos=devel_0128
