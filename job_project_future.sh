@@ -4,7 +4,8 @@
 #SBATCH --partition=mem_0128
 #SBATCH --qos=normal_0128
 ##SBATCH --account=lv71284
-#SBATCH --mail-user=giulio.genova@eurac.edu
+##SBATCH --mail-user=giulio.genova@eurac.edu
+#SBATCH --mail-user=francesco.rota@education.unibz.it
 #SBATCH --mail-type=BEGIN,END
 ##SBATCH --time-min=3
 
