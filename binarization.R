@@ -1,4 +1,4 @@
-binarization <- function(spek, sp, geo, t, work_dir, out_dir)
+binarization <- function(spek, sp, t, work_dir, out_dir)
 {
   setwd(work_dir)
   d<-dir(".", full.names=T, pattern = spek)
@@ -8,7 +8,7 @@ binarization <- function(spek, sp, geo, t, work_dir, out_dir)
   t1 <- subset(t, t[,1]== selected)
   t2 <- extent(t1[1,2], t1[1,3], t1[1,4], t1[1,5])
   ## create extent dalla tabella
-  geo <- crop(geo, t2)
+  #geo <- crop(geo, t2)
   wd<-getwd() ##1:length(d)
   for(i in 1:length(d)){
     #i =1
@@ -49,10 +49,6 @@ binarization <- function(spek, sp, geo, t, work_dir, out_dir)
       name3<-paste0(st3[2],"_",st2[3],"_",st2[4],"_bin_t3.tif")
       
       setwd("..")
-      
-      smr1 <- mask(smr1, geo)
-      smr2 <- mask(smr2, geo)
-      smr3 <- mask(smr3, geo)
       
       writeRaster(smr1, paste0(out_dir, name1), overwrite=TRUE)
       writeRaster(smr2, paste0(out_dir, name2), overwrite=TRUE)
