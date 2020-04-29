@@ -28,17 +28,23 @@ if(interactive()){
   outdir = argv$outdir
   scriptdir = argv$scriptdir
   
-  if(is.na(argv$models) | is.null(argv$models)){
+  if(any(is.na(argv$models)) | any(is.null(argv$models))){
     model = c("GLM","GAM","RF","GBM","CTA")
   }else {model = argv$models}
   
-  if(is.na(argv$species) | is.null(argv$species)){
+  if(any(is.na(argv$species)) | any(is.null(argv$species))){
     species = 1:8}else {species = as.numeric(argv$species)}
   
   setwd(workdir)
   source(paste0(scriptdir,"/project_future.R"))
   
-  model;species;n_cores;workdir;outdir;scriptdir;user
+  print(paste0("Model: ",model))
+  print(paste0("Species: ",species))
+  print(paste0("Cores: ",n_cores))
+  print(paste0("Workdir: ",workdir))
+  print(paste0("Outdir: ",outdir))
+  print(paste0("Scriptdir: ",scriptdir))
+  print(paste0("User: ",user))
   
 }
 
