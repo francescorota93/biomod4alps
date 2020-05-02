@@ -454,5 +454,9 @@ al <- levels(list(data.frame(do.call('rbind', strsplit(as.character(d[,1]),'.',f
 	writeRaster(m45_60_s,"Sempervivum_dolomiticum_45_60_sintesi.tif")
 	writeRaster(m45_80_s,"Sempervivum_dolomiticum_45_80_sintesi.tif") 
 	
+	### sintesi script
+	
+	
+	
 	
 	
