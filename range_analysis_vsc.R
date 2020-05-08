@@ -1,24 +1,24 @@
 library(raster)
-setwd("C:/Users/FRota/Desktop/models_past/bin")
+#setwd("C:/Users/FRota/Desktop/models_past/bin")
 
-d<-dir("bin", full.names=T)
+d<-dir("/data/models/bin_geo/", full.names=T)
 
 library(dplyr)
 library(tidyr)
 
-all_file <- list.files(".", pattern = ".tif")
+all_file <- list.files("/data/models/bin_geo/", pattern = ".tif")
 name_curr <- all_file[grepl("current", all_file)]
 name <- all_file[!grepl("current", all_file)]
 
 
 df = t(data.frame(strsplit(name,split = "_")))
-colnames(df) <- c("proj","GCM_scenario","year","genre","species","algo","bin","threshold")
+colnames(df) <- c("proj","GCM_scenario","year","genre","species","algo","bin","threshold", "extension")
 df = as_tibble(df)
 df = df %>%
 	separate(GCM_scenario, c("GCM", "scenario"), 2)
 
 df_curr = t(data.frame(strsplit(name_curr,split = "_")))
-colnames(df_curr) <- c("proj","scenario","genre","species","algo","bin","threshold")
+colnames(df_curr) <- c("proj","scenario","genre","species","algo","bin","threshold", "extension")
 df_curr = as_tibble(df_curr)
 df_curr = df_curr %>% mutate(GCM = NA,year = NA)
 
