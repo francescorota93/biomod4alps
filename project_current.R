@@ -1,5 +1,5 @@
 
-project_current = function(myBiomodModelOut,cur,t,read_from_file = TRUE) {
+project_current = function(myBiomodModelOut,cur,t,  projection_name, read_from_file = TRUE) {
   
   if(read_from_file){myBiomodModelOut = readRDS(myBiomodModelOut)}
   name_model = unlist(strsplit(x = myBiomodModelOut@sp.name,split = "[.]"))
@@ -11,7 +11,7 @@ project_current = function(myBiomodModelOut,cur,t,read_from_file = TRUE) {
   ## create extent dalla tabella
   cn  <- crop(cur, t2)
   cn<- stack(cn)
-  print(paste("done cropping",spname,"current"))
+  print(paste("done cropping",spname, projection_name))
   ###########################################################################
   ###########################      CURRENT        ###########################
   ###########################################################################
@@ -21,7 +21,7 @@ project_current = function(myBiomodModelOut,cur,t,read_from_file = TRUE) {
   myBiomodProj<- BIOMOD_Projection(
     modeling.output = myBiomodModelOut,
     new.env = cn,
-    proj.name = 'current',
+    proj.name =  projection_name,
     selected.models = 'all',
     binary.meth = NULL ,
     compress = 'FALSE',
@@ -29,5 +29,5 @@ project_current = function(myBiomodModelOut,cur,t,read_from_file = TRUE) {
   
   rm(myBiomodProj,cn) # to save memory
   
-  return(paste0(spname,"_",model,"_current","_done"))
+  return(paste0(spname,"_",model,"_", projection_name ,"_done"))
 }

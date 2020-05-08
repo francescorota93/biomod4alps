@@ -1,5 +1,7 @@
 if(interactive()){
   
+  predictors = "env_predictors/climate/present"
+  projection_name = "current"
   species = c(3,8)
   model = c("RF","GAM")
   n_cores = 2
@@ -19,9 +21,14 @@ if(interactive()){
   p <- add_argument(parser = p, arg = "--outdir", help="directory to sotore output relative to workdir",
                     default = "/models_future")
   p <- add_argument(parser = p, arg = "--user", help="which user is running the job", default = "frota")
+  p <- add_argument(parser = p, arg = "--predictors", help="directory of where predictors are", default = "env_predictors/climate/present")
+  p <- add_argument(parser = p, arg = "--projection_name", help="projection name of output files (e.g topography, future)", default = "current")
+  
   # Parse the command line arguments
   argv <- parse_args(p)
   
+  projection_name = argv$projection_name
+  predictors = argv$predictors
   n_cores = argv$cores
   user = argv$user
   workdir = argv$workdir
@@ -45,7 +52,8 @@ if(interactive()){
   print(paste0("Outdir: ",outdir))
   print(paste0("Scriptdir: ",scriptdir))
   print(paste0("User: ",user))
-  
+  print(paste0("Predictors dir: ",predictors))
+  print(paste0("Projection name type: ", projection_name))
 }
 
 library(biomod2)
@@ -60,8 +68,8 @@ s <- read.table("endemic_dolo50.txt", head = TRUE, sep = "\t")
 sp.names<-levels(factor(s[,1]))[species]
 #####################################
 # loading current environmental data
-cur=stack(dir("env_predictors/climate/present", full.names=T))
-
+#cur=stack(dir("env_predictors/climate/present", full.names=T))
+cur=stack(dir(predictors, full.names=T))
 ####################################
 
 out_dir = paste0(getwd(),outdir)
@@ -88,7 +96,7 @@ models_rds = models_rds[grepl(pattern = paste(sp.names,collapse = "|"),x = model
 ## do the job - current projections
 models_current = foreach(mod = models_rds) %dopar% {
   
-  project_current(myBiomodModelOut = mod,cur = cur,t = t,read_from_file = TRUE)
+  project_current(myBiomodModelOut = mod,cur = cur,t = t, projection_name = projection_name, read_from_file = TRUE)
   
 }
 
