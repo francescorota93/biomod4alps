@@ -1,5 +1,6 @@
 if(interactive()){
   
+  predictors = "env_predictors/climate/present"
   species = c(3,4)
   model = c("RF")
   n_cores = 2
@@ -19,9 +20,11 @@ if(interactive()){
   p <- add_argument(parser = p, arg = "--outdir", help="directory to sotore output relative to workdir",
                     default = "/models_future")
   p <- add_argument(parser = p, arg = "--user", help="which user is running the job", default = "frota")
+  p <- add_argument(parser = p, arg = "--predictors", help="directory of where predictors are", default = "env_predictors/climate/present")
   # Parse the command line arguments
   argv <- parse_args(p)
   
+  predictors = argv$predictors
   n_cores = argv$cores
   user = argv$user
   workdir = argv$workdir
@@ -45,7 +48,7 @@ if(interactive()){
   print(paste0("Outdir: ",outdir))
   print(paste0("Scriptdir: ",scriptdir))
   print(paste0("User: ",user))
-  
+  print(paste0("Predictors dir: ",predictors))
 }
 
 library(biomod2)
@@ -63,7 +66,9 @@ t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
 num_sp<-length(levels(factor(s[,1])))
 #####################################
 # loading current environmental data
-cur=stack(dir("env_predictors/climate/present", full.names=T))
+cur=stack(dir(predictors, full.names=T))
+
+# cur=stack(dir("env_predictors/climate/present", full.names=T))
 
 #####################################
 
