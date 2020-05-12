@@ -14,4 +14,5 @@ module load intel/18 intel-mkl/2018 R/3.6.2 gdal/2.4.1 proj/4.9.3
 
 ## Rscript $HOME/data/biomod4alps/launch_project_current.R all 15
 
-Rscript $HOME/data/biomod4alps/launch_project_current.R --cores 25  --workdir $HOME/data/ --scriptdir $HOME/data/biomod4alps -s 1 2 5 6 7 8 --models GLM GAM GBM RF CTA
+Rscript $HOME/data/biomod4alps/launch_project_current.R --cores 15  --workdir $HOME/data/ --scriptdir $HOME/data/biomod4alps -s 1 2 5 6 7 8 --models GBM
+
