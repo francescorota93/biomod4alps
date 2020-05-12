@@ -1,4 +1,4 @@
-#setwd("/home/lv71284/frota/data/") ###setwd("/home/lv71284/frota/data/")
+setwd("/home/lv71284/frota/data/") ###setwd("/home/lv71284/frota/data/")
 library(raster)
 library(PresenceAbsence)
 source("binarization.R")

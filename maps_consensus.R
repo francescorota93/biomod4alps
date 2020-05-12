@@ -60,7 +60,15 @@ paths
 for(i in length(paths)){
   name1 = paths[i]
   #x = paths[[i]]
+  #presente
   pr = stack(name1)
+  ps<-sum(pr)
+  name2 <- #paste0(#spec#"Campanula_morettiana","_pres_consensus.tif")
+  writeRaster(ps,name2,overwrite=TRUE)
+  #optimistic
+  op <- stack()
+  #pessimistic
+  pe <- stack()
 }
 
 # d <- list.files(".")
