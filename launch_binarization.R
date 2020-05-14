@@ -1,7 +1,7 @@
 setwd("/home/lv71284/frota/data/") ###setwd("/home/lv71284/frota/data/")
 library(raster)
 library(PresenceAbsence)
-source("data/biomod4alps/binarization.R")
+source("biomod4alps/binarization.R")
 #####################################
 # loading results and points
 ####################################
