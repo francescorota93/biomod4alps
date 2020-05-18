@@ -19,6 +19,8 @@ if(interactive()){
   p <- add_argument(parser = p, arg = "--outdir", help="directory to sotore output relative to workdir",
                     default = "/models_future")
   p <- add_argument(parser = p, arg = "--user", help="which user is running the job", default = "frota")
+  p <- add_argument(parser = p, arg = "--temprastdir", help="dir where to create temprastdir, default global", default = "/global/lv71284/frota/temp_rast_dir")
+  
   # Parse the command line arguments
   argv <- parse_args(p)
   
@@ -27,6 +29,7 @@ if(interactive()){
   workdir = argv$workdir
   outdir = argv$outdir
   scriptdir = argv$scriptdir
+  temprastdir = argv$temprastdir
   
   if(any(is.na(argv$models)) | any(is.null(argv$models))){
     model = c("GLM","GAM","RF","GBM","CTA")
@@ -74,7 +77,7 @@ setwd(out_dir)
 
 registerDoParallel(cores = n_cores)
 
-rasterOptions(tmpdir = paste0(getwd(),"/temp_rast_dir"),
+rasterOptions(tmpdir = temprastdir,
               maxmemory = 4.9e+09#,
               #memfrac = (1/n_cores)*0.8
 )
