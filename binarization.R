@@ -12,7 +12,7 @@ binarization <- function(spek, sp, t, work_dir, out_dir)
   wd<-getwd() ##1:length(d)
   for(i in 1:length(d)){
     #i =1
-    print(i)
+    print(d[i])
     setwd(d[i])
     d2<-dir(".", full.names=T, pattern= "proj_")
     sc<-mean(stack(dir(d2, full.names=T, pattern = "*.gri")))/1000
@@ -36,6 +36,7 @@ binarization <- function(spek, sp, t, work_dir, out_dir)
     
     for(k in 1:length(d2)){
       # k=1
+      print(d2[k])
       setwd(d2[k])
       s<-stack(dir(".", full.names=T, pattern = "*.gri"))
       sm<-mean(s)
@@ -58,4 +59,5 @@ binarization <- function(spek, sp, t, work_dir, out_dir)
     setwd("..")
   }
   return(spek)
+  rm(list=ls())
 }
