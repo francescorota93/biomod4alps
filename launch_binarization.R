@@ -7,7 +7,7 @@ source("biomod4alps/binarization.R")
 ####################################
 sp<-read.table("endemic_dolo50.txt", sep="\t", h=T) ### load spec occurrence file
 spek <- sub(pattern = "_", replacement = "\\.", x = as.character(unique(sp$species)))
-work_dir <- paste0(getwd(), "/models_topography/")
+work_dir <- paste0(getwd(), "/models_future/")
 out_dir <- paste0(getwd(), "/bin/")  ### cartella dove salva i file, crea cartella bin in wd
 #geo<- raster("geology/geology_endemic_dolo_all.tif")  ### load geology file (1,0)
 
