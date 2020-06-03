@@ -6,7 +6,7 @@ d<-dir("/data/models/bin_geo/", full.names=T)
 
 library(dplyr)
 library(tidyr)
-
+out_dir <- "/data/models/maps/"
 all_file <- list.files("/data/models/bin_geo/", pattern = ".tif")
 name_curr <- all_file[grepl("current", all_file)]
 name <- all_file[!grepl("current", all_file)]
@@ -30,25 +30,25 @@ df_tot_split = df_tot %>%
   group_split()
 
 get_lists = function(x){
- if (unique(x$scenario) == "current"){
-   name = "present"
- }
+  if (unique(x$scenario) == "current"){
+    name = "present"
+  }
   else if (unique(x$scenario) == "45"){
     name = "optimistic"
   } 
   else if (unique(x$scenario) == "85"){
     name = "pessimistic"
   } 
-    x = x %>% transmute(!!name := ifelse(scenario=="current",
-                                paste0(proj,"_",
-                                       scenario,"_",genre,"_",
-                                       species,"_",algo,"_",
-                                       bin,"_",threshold),
-                                paste0(proj,"_",
-                                       GCM,scenario,"_",
-                                       year,"_",genre,"_",
-                                       species,"_",algo,"_",
-                                       bin,"_",threshold))
+  x = x %>% transmute(!!name := ifelse(scenario=="current",
+                                       paste0(proj,"_",
+                                              scenario,"_",genre,"_",
+                                              species,"_",algo,"_",
+                                              bin,"_",threshold, "_", extention),
+                                       paste0(proj,"_",
+                                              GCM,scenario,"_",
+                                              year,"_",genre,"_",
+                                              species,"_",algo,"_",
+                                              bin,"_",threshold, "_", extention))
   ) %>% as.list()
   #x = list(current = as.list(x))
 }
@@ -57,19 +57,42 @@ paths = sapply(df_tot_split, get_lists )
 
 paths
 
-for(i in length(paths)){
+for(i in length(paths)){ 
   name1 = paths[i]
-  #x = paths[[i]]
-  #presente
-  pr = stack(name1)
+  x = paths[[i]]
+  pr = stack(x)
   ps<-sum(pr)
-  name2 <- #paste0(#spec#"Campanula_morettiana","_pres_consensus.tif")
-  writeRaster(ps,name2,overwrite=TRUE)
-  #optimistic
-  op <- stack()
-  #pessimistic
-  pe <- stack()
+  if(names(name1) %in% c("present","topo")){
+    name.list <- unlist(strsplit(x[1],split = "_"))
+    sp_name <- paste0(name.list[3],"_", name.list[4],"_", names(name1))
+    name2 <- paste0(sp_name, "_consensus.tif")
+    reclass.val <- 1
+    }
+  else if(names(name1) %in% c("optimistic", "pessimistic")){
+    name.list <- unlist(strsplit(x[1],split = "_"))
+    sp_name <- paste0(name.list[4],"_", name.list[5],"_", names(name1))
+    name2 <- paste0(sp_name,"_consensus.tif")
+    reclass.val <- 2
+    }
+  
+  writeRaster(ps, paste0(out_dir, name2), overwrite=TRUE)
+  
+  perc_tile <- length(x)/2
+  tot_tile <- lenght(x)
+  ps_r<-reclassify(ps, c(0,perc_tile,0, perc_tile,tot_tile, reclass.val))
+  writeRaster(ps_r, paste0(out_dir, sp_name,"_", "reclass.tif"))
 }
+
+
+
+ 
+m85_80_s<-sum(ps_r,m85_80_r)
+
+m45_80_s<-sum(ps_r,m45_80_r)
+
+writeRaster(m45_80_s,"Campanula_morettiana_45_80_sintesi.tif")
+writeRaster(m45_80_s,"Campanula_morettiana_45_80_sintesi.tif")
+
 
 # d <- list.files(".")
 # s <- read.table("../endemic_dolo50.txt", head = TRUE, sep = "\t")
