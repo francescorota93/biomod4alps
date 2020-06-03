@@ -15,7 +15,7 @@ binarization <- function(spek, sp, t, work_dir, out_dir)
     print(d[i])
     setwd(d[i])
     d2<-dir(".", full.names=T, pattern= "proj_")
-    sc<-mean(stack(dir(d2, full.names=T, pattern = "*.gri")))/1000
+    sc<-mean(stack(dir(d2, full.names=T, pattern = "*\\.gri")))/1000
     pa<-rasterize(sp[,2:3], sc, field=1, background=0)
     df1<-stack(pa,sc)
     df<-as.data.frame(df1, na.rm=T)
