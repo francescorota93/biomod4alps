@@ -84,14 +84,12 @@ for(i in length(paths)){
 }
 
 
-
- 
-m85_80_s<-sum(ps_r,m85_80_r)
-
-m45_80_s<-sum(ps_r,m45_80_r)
-
-writeRaster(m45_80_s,"Campanula_morettiana_45_80_sintesi.tif")
-writeRaster(m45_80_s,"Campanula_morettiana_45_80_sintesi.tif")
+# m85_80_s<-sum(ps_r,m85_80_r)
+# 
+# m45_80_s<-sum(ps_r,m45_80_r)
+# 
+# writeRaster(m45_80_s,"Campanula_morettiana_45_80_sintesi.tif")
+# writeRaster(m45_80_s,"Campanula_morettiana_45_80_sintesi.tif")
 
 
 # d <- list.files(".")
