@@ -38,7 +38,7 @@ binarization <- function(spek, sp, t, work_dir, out_dir)
       # k=1
       print(d2[k])
       setwd(d2[k])
-      s<-stack(dir(".", full.names=T, pattern = "*.gri"))
+      s<-stack(dir(".", full.names=T, pattern = "*\\.gri"))
       sm<-mean(s)
       smr1<-reclassify(sm,rclmat1)
       smr2<-reclassify(sm,rclmat2)
