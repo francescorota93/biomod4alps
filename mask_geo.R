@@ -1,9 +1,9 @@
 ### Launch Mask Geo
 
 setwd("/data/models/")
-library(foreach)
+#library(foreach)
 library(raster)
-library(doParallel)
+#library(doParallel)
 #source("biomod4alps/mask_geo_function.R")
 
 d<-dir("bin/", full.names=T)
