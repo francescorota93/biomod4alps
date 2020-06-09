@@ -9,7 +9,7 @@ library(raster)
 d<-dir("bin/", full.names=T)
 geo<- raster("geology/geology_endemic_dolo_all.tif")
 s <- read.table("endemic_dolo50.txt", head = TRUE, sep = "\t")
-species <- c(1:8) ### numero di specie c(1:8)
+species <- c(5:8) ### numero di specie c(1:8)
 for(i in species){
   sp.names<-levels(factor(s[,1]))[i]
   d2<-list.files("bin/", pattern = sp.names, full.names = TRUE)

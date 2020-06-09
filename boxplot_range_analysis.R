@@ -1,5 +1,5 @@
-setwd("C:/Users/FRota/Desktop/topoclim/climate/")
-t<-read.table("range_analysis_past.txt", sep="\t", h=T)
+setwd("/data/models/")
+t<-read.table("range_analysis.txt", sep="\t", h=T)
 t[is.na(t)]
 t <- na.omit(t)
 # levels(t$Species) <- c(levels(t$Species), "Campanula") 

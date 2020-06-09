@@ -1,7 +1,7 @@
 library(raster)
-#setwd("C:/Users/FRota/Desktop/models_past/bin")
+setwd("/data/models/bin_geo/")
 
-d<-dir("/data/models/bin_geo/", full.names=T)
+d<-dir(".", full.names=T)
 
 library(dplyr)
 library(tidyr)
@@ -9,7 +9,8 @@ library(tidyr)
 all_file <- list.files("/data/models/bin_geo/", pattern = ".tif")
 name_curr <- all_file[grepl("current", all_file)]
 name <- all_file[!grepl("current", all_file)]
-
+top <- all_file[!grepl("topo", all_file)]
+name <- top[!grepl("current", top)]
 
 df = t(data.frame(strsplit(name,split = "_")))
 colnames(df) <- c("proj","GCM_scenario","year","genre","species","algo","bin","threshold", "extension")
@@ -17,7 +18,7 @@ df = as_tibble(df)
 df = df %>%
 	separate(GCM_scenario, c("GCM", "scenario"), 2)
 
-df_curr = t(data.frame(strsplit(name_curr,split = "_")))
+ df_curr = t(data.frame(strsplit(name_curr,split = "_")))
 colnames(df_curr) <- c("proj","scenario","genre","species","algo","bin","threshold", "extension")
 df_curr = as_tibble(df_curr)
 df_curr = df_curr %>% mutate(GCM = NA,year = NA)
@@ -56,9 +57,9 @@ for(i in 1:length(paths)){
 	c<-grep("current",d2)
 	o<-grep("45",d2)
 	p<-grep("85",d2)
-	cur<-stack(d2[c])
-	ot<-stack(d2[o])
-	ps<-stack(d2[p])
+	cur<-stack(paste0(d2[c],"_geo.tif"))
+	ot<-stack(paste0(d2[c(o)],"_geo.tif"))
+	ps<-stack(paste0(d2[p],"_geo.tif"))
 	cr<-as.matrix(cellStats(cur, sum))
 	rownames(cr)<-names(cur)
 	otr<-as.matrix(cellStats(ot, sum))
