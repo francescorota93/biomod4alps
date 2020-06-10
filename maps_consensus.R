@@ -9,7 +9,8 @@ library(tidyr)
 out_dir <- "/data/models/maps/"
 all_file <- list.files("/data/models/bin_geo/", pattern = ".tif")
 name_curr <- all_file[grepl("current", all_file)]
-name <- all_file[!grepl("current", all_file)]
+top <- all_file[!grepl("topo", all_file)]
+name <- top[!grepl("current", top)]
 
 
 df = t(data.frame(strsplit(name,split = "_")))
@@ -78,7 +79,7 @@ for(i in length(paths)){
   writeRaster(ps, paste0(out_dir, name2), overwrite=TRUE)
   
   perc_tile <- length(x)/2
-  tot_tile <- lenght(x)
+  tot_tile <- length(x)
   ps_r<-reclassify(ps, c(0,perc_tile,0, perc_tile,tot_tile, reclass.val))
   writeRaster(ps_r, paste0(out_dir, sp_name,"_", "reclass.tif"))
 }

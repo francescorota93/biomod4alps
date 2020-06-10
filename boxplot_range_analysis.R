@@ -1,5 +1,5 @@
 setwd("/data/models/")
-t<-read.table("range_analysis.txt", sep="\t", h=T)
+t<-read.table("results_range_analysisrange_analysis.txt", sep="\t", h=T)
 t[is.na(t)]
 t <- na.omit(t)
 # levels(t$Species) <- c(levels(t$Species), "Campanula") 
@@ -31,7 +31,8 @@ myTheme <- theme(
 ### without algorithms
 p<-ggplot(data = t, aes(x=Species, y=range_change)) 
 p<-p+geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5)
-p+myTheme +  facet_wrap(interaction(t$year))
+p+myTheme +scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
+guide = guide_axis(n.dodge = 2)) #+  facet_wrap(interaction(t$year))
 ggsave("range_change1.pdf", width = 20, height = 10)
 
 p<-ggplot(data = t, aes(x=Species, y=range_turnover, fill = as.factor(Scenario))) 

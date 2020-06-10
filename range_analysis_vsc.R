@@ -58,7 +58,7 @@ for(i in 1:length(paths)){
 	o<-grep("45",d2)
 	p<-grep("85",d2)
 	cur<-stack(paste0(d2[c],"_geo.tif"))
-	ot<-stack(paste0(d2[c(o)],"_geo.tif"))
+	ot<-stack(paste0(d2[o],"_geo.tif"))
 	ps<-stack(paste0(d2[p],"_geo.tif"))
 	cr<-as.matrix(cellStats(cur, sum))
 	rownames(cr)<-names(cur)
@@ -67,6 +67,7 @@ for(i in 1:length(paths)){
 	m<-rbind(cr, otr,psr)
 	s<-stack(ot,ps)
 	df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA)
+	#for(z in paths)
 	x1_curr <- unlist(strsplit(d2[i], "[_]"))[2]
 	if (x1_curr == "current"){
 		gn<-unlist(strsplit(d2[i], "[_]"))[3]
