@@ -49,7 +49,7 @@ paths = sapply(df_tot_split, get_lists )
 
 paths
 
-df<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA)
+df<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
 
 ### ciclo for per gruppo
 for(i in 1:length(paths)){
@@ -66,7 +66,7 @@ for(i in 1:length(paths)){
 	psr<-as.matrix(cellStats(ps, sum))
 	m<-rbind(cr, otr,psr)
 	s<-stack(ot,ps)
-	df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA)
+	df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
 	#for(z in paths)
 	x1_curr <- unlist(strsplit(d2[i], "[_]"))[2]
 	if (x1_curr == "current"){
@@ -103,7 +103,9 @@ for(i in 1:length(paths)){
 		c<-((rg-rl)*100)/pr
 		#Range turnover T = 100*(RL + RG)/(PR + RG)
 		t<-((rg+rl)*100)/(pr+rg)
-		df2<-data.frame(Species=sp, Algo=algo, GCM=gcm,Scenario=sce, Year = y, Threshold = tres, present_range=pr,range_gain=rg,range_loss=rl, range_change=c, range_turnover=t)
+		#Range change without gain CWG = 100*(RG  RL)/PR
+		cwg <-(-(rl)*100)/pr
+		df2<-data.frame(Species=sp, Algo=algo, GCM=gcm,Scenario=sce, Year = y, Threshold = tres, present_range=pr,range_gain=rg,range_loss=rl, range_change=c, range_turnover=t,range_change_without_gain = cwg)
 		df1<-rbind(df1,df2)}
 	df<-rbind(df,df1)
 }

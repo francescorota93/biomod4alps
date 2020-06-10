@@ -1,5 +1,5 @@
 setwd("/data/models/")
-t<-read.table("results_range_analysisrange_analysis.txt", sep="\t", h=T)
+t<-read.table("results_range_analysis/range_analysis.txt", sep="\t", h=T)
 t[is.na(t)]
 t <- na.omit(t)
 # levels(t$Species) <- c(levels(t$Species), "Campanula") 
