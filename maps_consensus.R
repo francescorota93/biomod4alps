@@ -56,11 +56,14 @@ get_lists = function(x){
 
 paths = sapply(df_tot_split, get_lists )
 
-paths
-
-for(i in length(paths)){ 
+#paths
+#print("ciao")
+for(i in 1:length(paths)){ 
+  print(i)
   name1 = paths[i]
+  print(names(name1))
   x = paths[[i]]
+  print(x)
   pr = stack(x)
   ps<-sum(pr)
   if(names(name1) %in% c("present","topo")){
