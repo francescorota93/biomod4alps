@@ -3,6 +3,8 @@ t<-read.table("results_range_analysis/range_analysis.txt", sep="\t", h=T)
 t[is.na(t)]
 t <- na.omit(t)
 t$Species <- factor(t$Species)
+t$Scenario <- factor(t$Scenario)
+
 # levels(t$Species) <- c(levels(t$Species), "Campanula") 
 # t$Species[t$Species == "morettiana"] <- "Campanula"
 # levels(t$Species) <- c(levels(t$Species), "Rhizobotrya") 
@@ -30,10 +32,29 @@ myTheme <- theme(
 # ggsave("range_change.pdf", width = 10, height = 10)
 
 ### without algorithms
-p<-ggplot(data = t, aes(x=Species, y=range_change_without_gain)) 
-p<-p+geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5)
-p+myTheme +scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
-  guide = guide_axis(n.dodge = 2)) #+  facet_wrap(interaction(t$year))
+
+#### RANGE LOSS
+p<-ggplot(data = t, aes(x=Species, y=range_change_without_gain, fill = Scenario)) +
+   geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5) +
+   scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
+   guide = guide_axis(n.dodge = 2)) +
+   scale_fill_discrete(name = "2080 scenario", labels = c("optimistic (rcp 4.5)", "pessimistic (rcp 8.5)")) +
+   ylab("Range Loss (%)") + 
+   myTheme #+ 
+   #facet_wrap(t$Scenario)
+
+#### RANGE TURNOVER
+p<-ggplot(data = t, aes(x=Species, y=range_turnover, fill = Scenario)) +
+  geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5) +
+  scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
+                   guide = guide_axis(n.dodge = 2)) +
+  scale_fill_discrete(name = "2080 scenario", labels = c("optimistic (rcp 4.5)", "pessimistic (rcp 8.5)")) +
+  ylab("Range Turnpver (%)") + 
+  myTheme #+ 
+#facet_wrap(t$Scenario)
+
+
+
 ggsave("range_change1.pdf", width = 20, height = 10)
 
 p<-ggplot(data = t, aes(x=Species, y=range_turnover, fill = as.factor(Scenario))) 

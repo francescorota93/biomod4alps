@@ -54,19 +54,25 @@ df<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, 
 ### ciclo for per gruppo
 for(i in 1:length(paths)){
   d2 <- paths[[i]]
-  c<-grep("current",d2)
-  o<-grep("45",d2)
-  p<-grep("85",d2)
-  cur<-stack(paste0(d2[c],"_geo.tif"))
-  ot<-stack(paste0(d2[o],"_geo.tif"))
-  ps<-stack(paste0(d2[p],"_geo.tif"))
+  tr <- c("t1", "t2", "t3")
+  df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
+  
+  for(k in 1:length(tr)){
+  d2.1 <- grep(tr[k], d2) ### per fare ogni threshold in maniera distinta
+  d3 <- d2[d2.1] 
+  c<-grep("current",d3)
+  o<-grep("45",d3)
+  p<-grep("85",d3)
+  cur<-stack(paste0(d3[c],"_geo.tif"))
+  ot<-stack(paste0(d3[o],"_geo.tif"))
+  ps<-stack(paste0(d3[p],"_geo.tif"))
   cr<-as.matrix(cellStats(cur, sum))
   rownames(cr)<-names(cur)
   otr<-as.matrix(cellStats(ot, sum))
   psr<-as.matrix(cellStats(ps, sum))
   m<-rbind(cr, otr,psr)
   s<-stack(ot,ps)
-  df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
+  df2<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
   
   for(j in 1:nlayers(s)){
     gn<-unlist(strsplit(names(s)[j], "[_]"))[4]
@@ -80,7 +86,7 @@ for(i in 1:length(paths)){
     #Present range
     pr<-cellStats(cur, sum)
     #Range loss
-    rl<-cellStats(abs(reclassify((cur+s[[j]]*2), c(1.5,3,0,1,1.5,1))),sum)
+    rl<-cellStats(abs(reclassify((cur+s[[j]]*2), c(1.5,Inf,0,1,1.5,1))),sum)
     #Range gain
     rg<-cellStats(abs(s[[j]]-cur), sum)
     #Range change C = 100*(RG  RL)/PR
@@ -90,10 +96,12 @@ for(i in 1:length(paths)){
     #Range change without gain CWG = 100*(RG  RL)/PR
     cwg <-(-(rl)*100)/pr
     df2<-data.frame(Species=sp, Algo=algo, GCM=gcm,Scenario=sce, Year = y, Threshold = tres, present_range=pr,range_gain=rg,range_loss=rl, range_change=c, range_turnover=t,range_change_without_gain = cwg)
-    df1<-rbind(df1,df2)}
-  df<-rbind(df,df1)
+    df1<-rbind(df1,df2)
+    }
+  df4<-rbind(df,df1)
+  }
+ df <- rbind(df, df4) 
 }
-
 write.table(df, "range_analysis.txt", sep="\t", row.names = FALSE )
 
 
