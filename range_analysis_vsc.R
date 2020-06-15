@@ -105,7 +105,7 @@ write.table(df, "range_analysis.txt", sep="\t", row.names = FALSE )
 ###############################################################################
 library(plyr)
 
-t<-read.table("results_range_analysis/range_analysis.txt", sep="\t", h=T)
+t<-read.table("../results_range_analysis/range_analysis.txt", sep="\t", h=T)
 t[is.na(t)]<-0
 
 rbi<-ddply(t , .(Species, Scenario), summarize,
@@ -121,4 +121,4 @@ rbi<-ddply(t , .(Species, Scenario), summarize,
            sd_pr = round(sd(present_range), 3)
 )
 write.table(rbi, "sintesi range analysis.txt", sep="\t")
-t1<-read.table("results_range_analysis/sintesi range analysis.txt", sep="\t", h=T)
+t1<-read.table("../results_range_analysis/sintesi range analysis.txt", sep="\t", h=T)
