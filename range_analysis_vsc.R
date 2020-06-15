@@ -69,9 +69,9 @@ for(i in 1:length(paths)){
   df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
   
   for(j in 1:nlayers(s)){
-    gn<-unlist(strsplit(d2[i], "[_]"))[4]
-    sp<-unlist(strsplit(d2[i], "[_]"))[5] 
-    algo<-unlist(strsplit(d2[i], "[_]"))[6]
+    gn<-unlist(strsplit(names(s)[j], "[_]"))[4]
+    sp<-unlist(strsplit(names(s)[j], "[_]"))[5] 
+    algo<-unlist(strsplit(names(s)[j], "[_]"))[6]
     gcm<-substr(unlist(strsplit(names(s[[j]]),"_"))[2], 1,2)
     sce<-substr(unlist(strsplit(names(s[[j]]),"_"))[2], 3,4)
     y <-unlist(strsplit(names(s[[j]]),"_"))[3]
@@ -105,7 +105,7 @@ write.table(df, "range_analysis.txt", sep="\t", row.names = FALSE )
 ###############################################################################
 library(plyr)
 
-t<-read.table("range_analysis.txt", sep="\t", h=T)
+t<-read.table("results_range_analysis/range_analysis.txt", sep="\t", h=T)
 t[is.na(t)]<-0
 
 rbi<-ddply(t , .(Species, Scenario), summarize,
@@ -121,3 +121,4 @@ rbi<-ddply(t , .(Species, Scenario), summarize,
            sd_pr = round(sd(present_range), 3)
 )
 write.table(rbi, "sintesi range analysis.txt", sep="\t")
+t1<-read.table("results_range_analysis/sintesi range analysis.txt", sep="\t", h=T)
