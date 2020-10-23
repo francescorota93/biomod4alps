@@ -4,7 +4,8 @@ t[is.na(t)]
 t <- na.omit(t)
 t$Species <- factor(t$Species)
 t$Scenario <- factor(t$Scenario)
-
+install.packages("forcats")
+library(forcats)
 # levels(t$Species) <- c(levels(t$Species), "Campanula") 
 # t$Species[t$Species == "morettiana"] <- "Campanula"
 # levels(t$Species) <- c(levels(t$Species), "Rhizobotrya") 
@@ -24,24 +25,42 @@ myTheme <- theme(
 	axis.text = element_text(color = "black", size=14),
 	axis.text.x = element_text(color = "black", size=14),
 )
-
-# p<-ggplot(data = t, aes(x=Species, y=range_change, fill = Algo)) 
-# p<-p+geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5)
-# p<-p+scale_fill_manual(values=c("grey100","grey60", "grey80","grey70","grey90"))
-# p+myTheme +  facet_wrap(interaction(t$Scenario, t$year))
+## algorithms -----
+p<-ggplot(data = t, aes(x=Species, y=range_change, fill = Algo)) +
+ geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5) +
+ scale_fill_manual(values=c("grey100","grey60", "grey80","grey70","grey90")) +
+  scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
+                   guide = guide_axis(n.dodge = 2))+
+ myTheme +  facet_wrap(interaction(t$Scenario))
 # ggsave("range_change.pdf", width = 10, height = 10)
 
 ### without algorithms
 
-#### RANGE LOSS
-p<-ggplot(data = t, aes(x=Species, y=range_change_without_gain, fill = Scenario)) +
+#### RANGE LOSS -----
+d<-ggplot(data = t, aes(x=Species, y=range_change_without_gain, fill = Scenario)) +
    geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5) +
    scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
    guide = guide_axis(n.dodge = 2)) +
    scale_fill_discrete(name = "2080 scenario", labels = c("optimistic (rcp 4.5)", "pessimistic (rcp 8.5)")) +
-   ylab("Range Loss (%)") + 
-   myTheme #+ 
+   ylab("Range Loss (%)") +
+  scale_fill_brewer(palette="Greys") +
+   stat_compare_means(aes(label = paste0("p = ", ..p.format..)), method = 'kruskal.test')+
+   myTheme 
    #facet_wrap(t$Scenario)
+ggplot_build(d)$data
+
+### RANGE CHANGE
+p<-ggplot(data = t, aes(x=Species, y=range_change, fill = Scenario)) +
+  geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5) +
+  scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
+                   guide = guide_axis(n.dodge = 2)) +
+  scale_fill_discrete(name = "2080 scenario", labels = c("optimistic (rcp 4.5)", "pessimistic (rcp 8.5)")) +
+  scale_fill_brewer(palette="Greys") +
+  ylab("Range Change (%)") + 
+  stat_compare_means(aes(label = paste0("p = ", ..p.format..)), method = 'kruskal.test')+
+  myTheme #+ 
+#facet_wrap(t$Scenario)
+
 
 #### RANGE TURNOVER
 p<-ggplot(data = t, aes(x=Species, y=range_turnover, fill = Scenario)) +
@@ -49,7 +68,7 @@ p<-ggplot(data = t, aes(x=Species, y=range_turnover, fill = Scenario)) +
   scale_x_discrete(labels=c("Campanula morettiana","Festuca austrodolomitica","Gentiana brentae", "Nigritella bushmanniae", "Primula tyrolensis", "Rhizobotrya alpina", "Saxifraga facchinii", "Sempervivum dolomiticum"),
                    guide = guide_axis(n.dodge = 2)) +
   scale_fill_discrete(name = "2080 scenario", labels = c("optimistic (rcp 4.5)", "pessimistic (rcp 8.5)")) +
-  ylab("Range Turnpver (%)") + 
+  ylab("Range Turnover (%)") + 
   myTheme #+ 
 #facet_wrap(t$Scenario)
 

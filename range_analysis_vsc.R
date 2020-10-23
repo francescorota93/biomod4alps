@@ -58,8 +58,7 @@ for(i in 1:length(paths)){
   df1<-data.frame(Species=NA, Algo=NA, GCM=NA,Scenario=NA, Year =NA, Threshold=NA, present_range=NA, range_gain=NA,range_loss=NA, range_change=NA, range_turnover=NA, range_change_without_gain = NA)
   
   for(k in 1:length(tr)){
-  d2.1 <- grep(tr[k], d2) ### per fare ogni threshold in maniera distinta
-  d3 <- d2[d2.1] 
+  d3 <- d2[grepl(tr[k], d2)]  ### per fare ogni threshold in maniera distinta
   c<-grep("current",d3)
   o<-grep("45",d3)
   p<-grep("85",d3)
@@ -86,22 +85,30 @@ for(i in 1:length(paths)){
     #Present range
     pr<-cellStats(cur, sum)
     #Range loss
-    rl<-cellStats(abs(reclassify((cur+s[[j]]*2), c(1.5,Inf,0,1,1.5,1))),sum)
+    rl<-cellStats(abs(reclassify((cur+s[[j]]*2), c(1.5,3,0,1,1.5,1))),sum)
     #Range gain
-    rg<-cellStats(abs(s[[j]]-cur), sum)
+    x<-s[[j]]-cur
+    x<-reclassify(x,c(-Inf,0,0,0,2,1))
+    rg<-cellStats(x, sum)
+    
+    # #Range loss
+    # rl<-cellStats(abs(reclassify((cur+s[[j]]*2), c(1.5,Inf,0,1,1.5,1))),sum)
+    # #Range gain
+    # rg<-cellStats(abs(s[[j]]-cur), sum)
     #Range change C = 100*(RG  RL)/PR
     c<-((rg-rl)*100)/pr
     #Range turnover T = 100*(RL + RG)/(PR + RG)
     t<-((rg+rl)*100)/(pr+rg)
-    #Range change without gain CWG = 100*(RG  RL)/PR
+    #Range change without gain,  range loss percentage with no dispersal
     cwg <-(-(rl)*100)/pr
     df2<-data.frame(Species=sp, Algo=algo, GCM=gcm,Scenario=sce, Year = y, Threshold = tres, present_range=pr,range_gain=rg,range_loss=rl, range_change=c, range_turnover=t,range_change_without_gain = cwg)
     df1<-rbind(df1,df2)
     }
-  df4<-rbind(df,df1)
+  # df1<-rbind(df1,df2)
   }
- df <- rbind(df, df4) 
+  df <- rbind(df, df1)
 }
+
 write.table(df, "range_analysis.txt", sep="\t", row.names = FALSE )
 
 
@@ -126,7 +133,9 @@ rbi<-ddply(t , .(Species, Scenario), summarize,
            mean_rl = round(mean(range_loss), 3),
            sd_rl = round(sd(range_loss), 3),
            mean_pr = round(mean(present_range), 3),
-           sd_pr = round(sd(present_range), 3)
+           sd_pr = round(sd(present_range), 3),
+           mean_cwg = round(mean(range_change_without_gain), 3),
+           sd_cwg = round(sd(range_change_without_gain), 3),
 )
-write.table(rbi, "sintesi range analysis.txt", sep="\t")
-t1<-read.table("../results_range_analysis/sintesi range analysis.txt", sep="\t", h=T)
+write.table(rbi, "sintesi_range_analysis.txt", sep="\t")
+t1<-read.table("../results_range_analysis/sintesi_range_analysis.txt", sep="\t", h=T)
