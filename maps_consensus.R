@@ -1,6 +1,6 @@
 ### sintesi script
 
-setwd("/data/models/bin_geo/") 
+setwd("/data/models/bin_geo") 
 
 d<-dir("/data/models/bin_geo/", full.names=T)
 
@@ -58,6 +58,7 @@ paths = sapply(df_tot_split, get_lists )
 
 #paths
 #print("ciao")
+
 for(i in 1:length(paths)){ 
   print(i)
   name1 = paths[i]
@@ -80,8 +81,12 @@ for(i in 1:length(paths)){
     }
   
   writeRaster(ps, paste0(out_dir, name2), overwrite=TRUE)
-  
-  perc_tile <- length(x)/2
+  ## 50% length(x)/2
+  ## 75% length(x)*3/4
+  ## 100% lenght(x)-1
+  #perc_tile <- length(x)/2
+  #perc_tile <- length(x)*3/4
+  perc_tile <- length(x)*99.99/100
   tot_tile <- length(x)
   ps_r<-reclassify(ps, c(0,perc_tile,0, perc_tile,tot_tile, reclass.val))
   writeRaster(ps_r, paste0(out_dir, sp_name,"_", "reclass.tif"))

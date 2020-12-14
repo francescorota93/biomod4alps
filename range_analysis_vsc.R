@@ -120,7 +120,7 @@ write.table(df, "range_analysis.txt", sep="\t", row.names = FALSE )
 ###############################################################################
 library(plyr)
 
-t<-read.table("../results_range_analysis/range_analysis.txt", sep="\t", h=T)
+t<-read.table("models/results_range_analysis/range_analysis.txt", sep="\t", h=T)
 t[is.na(t)]<-0
 
 rbi<-ddply(t , .(Species, Scenario), summarize,
@@ -136,6 +136,12 @@ rbi<-ddply(t , .(Species, Scenario), summarize,
            sd_pr = round(sd(present_range), 3),
            mean_cwg = round(mean(range_change_without_gain), 3),
            sd_cwg = round(sd(range_change_without_gain), 3),
+           mean_rg_perc = round(mean(range_gain/present_range*100), 3),
+           sd_rg_perc = round(sd(range_gain/present_range*100), 3)
 )
-write.table(rbi, "sintesi_range_analysis.txt", sep="\t")
-t1<-read.table("../results_range_analysis/sintesi_range_analysis.txt", sep="\t", h=T)
+write.table(rbi, "models/results_range_analysis/sintesi_range_analysis.txt", sep="\t")
+t1<-read.table("models/results_range_analysis/sintesi_range_analysis.txt", sep="\t", h=T)
+
+head(t)
+
+

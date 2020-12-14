@@ -84,4 +84,87 @@ print(paste("done", i, j, k))
  }
 }
 
-write.csv(df_habitat_parks, filename = "df_habitat_parks.csv")
+write.csv(df_habitat_parks, "df_habitat_parks.csv")
+
+df_habitat_parks <- read.csv("/data/models/Protected_areas/df_habitat_parks.csv")
+str(df_habitat_parks)
+df_habitat_parks <- df_habitat_parks %>% mutate(zone, code = ifelse(zone == 0, "out_PA",
+                                              ifelse(zone == 9, "PnAB",
+                                              ifelse(zone == 5, "PnMC",
+                                              ifelse(zone == 8, "PnPP",
+                                              ifelse(zone == 2, "PNDB",
+                                              ifelse(zone == 1, "PnDF",
+                                              ifelse(zone == 3, "PnDS",
+                                              ifelse(zone == 7, "PnFS",
+                                              ifelse(zone == 10, "PnDA",
+                                              ifelse(zone == 4, "PnPO",
+                                              ifelse(zone == 6, "PnSC", NA))))))))))))
+
+df_habitat_parks <- df_habitat_parks %>% mutate(zone, PA = ifelse(zone == 0, "out_PA",
+                                              ifelse(zone == 9, "PA",
+                                              ifelse(zone == 5, "PA",
+                                              ifelse(zone == 8, "PA",
+                                              ifelse(zone == 2, "PA",
+                                              ifelse(zone == 1, "PA",
+                                              ifelse(zone == 3, "PA",
+                                              ifelse(zone == 7, "PA",
+                                              ifelse(zone == 10, "PA",
+                                              ifelse(zone == 4, "PA",
+                                              ifelse(zone == 6, "PA", NA))))))))))))
+
+df_habitat_parks <- na.omit(df_habitat_parks)
+df_habitat_parks <- subset(df_habitat_parks, code != "PnMC") 
+
+df_habitat_parks <- df_habitat_parks %>% mutate(loss, rel_loss = loss/(loss+stable))
+df_habitat_parks <- df_habitat_parks %>% mutate(loss, rel_gain = gain/(loss+stable))
+
+
+library(ggplot2)
+library(ggbiplot)
+library(tidyverse)
+library(forcats)
+
+myTheme <- theme(
+  panel.background = element_rect(fill = "white", colour = "black"), 
+  panel.grid.major =  element_blank(),
+  panel.grid.minor = element_blank(),
+  axis.text = element_text(color = "black", size=14),
+  axis.text.x = element_text(color = "black", size=14),
+)
+levels(df_habitat_parks$species) <- c("Cm", "Fa", "Gb", "Nb", "Pt", "Ra", "Sf", "Sd")
+
+
+### optimistic
+
+df_habitat_parks_opt <- subset(df_habitat_parks, scenario == 45)
+
+b <-ggplot(data =  df_habitat_parks_opt, aes(x=fct_reorder(code, rel_loss), y= rel_loss)) +
+  geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5)+
+  #scale_fill_manual(values=c( "grey60", "white")) +
+  labs(x = "Protected Areas")+
+  ## p value in scenario per parks
+  #stat_compare_means(aes(as_label("p.value")), method = "kruskal")+
+  myTheme +
+  scale_y_continuous("range loss", breaks = c(0,0.5,1)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ 
+  facet_wrap(~species, nrow = 4)
+ggsave(b, filename="models/Protected_areas/habitat_suitability_parks_opt.png", dpi = 300)
+
+
+### pessimistic
+
+df_habitat_parks_pes <- subset(df_habitat_parks, scenario == 85)
+
+p <-ggplot(data =  df_habitat_parks_pes, aes(x=fct_reorder(code, rel_loss), y= rel_loss)) +
+  geom_boxplot(outlier.fill = NULL, outlier.shape = 1, outlier.size = 1.5)+
+  #scale_fill_manual(values=c( "grey60", "white")) +
+  labs(x = "Protected Areas")+
+  ## p value in scenario per parks
+  #stat_compare_means(aes(as_label("p.value")), method = "kruskal")+
+  myTheme +
+  scale_y_continuous("range loss", breaks = c(0,0.5,1)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ 
+  facet_wrap(~species, nrow = 4)
+ggsave(p, filename="models/Protected_areas/habitat_suitability_parks_pes.png", dpi = 300)
+
+
