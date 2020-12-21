@@ -8,6 +8,7 @@ sp<-read.table("endemic_dolo50.txt", sep="\t", h=T) ### load spec occurrence fil
 spek <- sub(pattern = "_", replacement = "\\.", x = as.character(unique(sp$species)))
 
 work_dir <- paste0(getwd(), "/models_future/")
+setwd(work_dir)
 out_dir <- paste0(getwd(), "/habitat_model/")  ### cartella dove salva i file, crea cartella bin in wd
 
 geo<- raster("geology/geology_endemic_dolo_all.tif")  ### load geology file (1,0)
@@ -20,7 +21,7 @@ d3 <- list.files(path = ".", )
 
 registerDoParallel(cores = 8)
 
-foreach(i = spek) % dopar % {
+foreach(i = spek) %dopar% {
   
   selected<- sub(pattern = "\\.", replacement = "_", x = spek)
   sp.names<-levels(factor(t[,1]))
