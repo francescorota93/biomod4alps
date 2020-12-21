@@ -1,6 +1,6 @@
 ### sintesi script
 
-setwd("/data/models/bin_geo/") 
+setwd("/data/models/bin_geo") 
 
 d<-dir("/data/models/bin_geo/", full.names=T)
 
@@ -9,7 +9,8 @@ library(tidyr)
 out_dir <- "/data/models/maps/"
 all_file <- list.files("/data/models/bin_geo/", pattern = ".tif")
 name_curr <- all_file[grepl("current", all_file)]
-name <- all_file[!grepl("current", all_file)]
+top <- all_file[!grepl("topo", all_file)]
+name <- top[!grepl("current", top)]
 
 
 df = t(data.frame(strsplit(name,split = "_")))
@@ -55,11 +56,15 @@ get_lists = function(x){
 
 paths = sapply(df_tot_split, get_lists )
 
-paths
+#paths
+#print("ciao")
 
-for(i in length(paths)){ 
+for(i in 1:length(paths)){ 
+  print(i)
   name1 = paths[i]
+  print(names(name1))
   x = paths[[i]]
+  print(x)
   pr = stack(x)
   ps<-sum(pr)
   if(names(name1) %in% c("present","topo")){
@@ -76,9 +81,13 @@ for(i in length(paths)){
     }
   
   writeRaster(ps, paste0(out_dir, name2), overwrite=TRUE)
-  
-  perc_tile <- length(x)/2
-  tot_tile <- lenght(x)
+  ## 50% length(x)/2
+  ## 75% length(x)*3/4
+  ## 100% lenght(x)-1
+  #perc_tile <- length(x)/2
+  #perc_tile <- length(x)*3/4
+  perc_tile <- length(x)*99.99/100
+  tot_tile <- length(x)
   ps_r<-reclassify(ps, c(0,perc_tile,0, perc_tile,tot_tile, reclass.val))
   writeRaster(ps_r, paste0(out_dir, sp_name,"_", "reclass.tif"))
 }
