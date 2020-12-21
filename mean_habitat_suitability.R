@@ -11,17 +11,17 @@ work_dir <- paste0(getwd(), "/models_future/")
 setwd(work_dir)
 out_dir <- paste0(getwd(), "/habitat_model/")  ### cartella dove salva i file, crea cartella bin in wd
 
-geo<- raster("geology/geology_endemic_dolo_all.tif")  ### load geology file (1,0)
+geo<- raster("../geology/geology_endemic_dolo_all.tif")  ### load geology file (1,0)
 
 # cut on extent per species  t <- table(xmin,ymax) 
-t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
+t <- read.table("../spec_extents.txt", head = TRUE, sep = "\t")
 
 
 d3 <- list.files(path = ".", )
 
 registerDoParallel(cores = 8)
 
-foreach(i = spek) %dopar% {
+foreach(i = seq_along(spek)) %dopar% {
   
   selected<- sub(pattern = "\\.", replacement = "_", x = spek)
   sp.names<-levels(factor(t[,1]))
@@ -36,11 +36,11 @@ foreach(i = spek) %dopar% {
   pr_st <- stack(paste0(d3.1,"/",d6))
   pr_mean <- mean(pr_st)
   pr_mean[pr_mean < 510] <- NA
-  writeRaster(pr_mean,  paste0(out_dir, spek[i], "mean_present.tif"), overwrite=TRUE)
+  writeRaster(pr_mean,  paste0(out_dir, spek[i], "_mean_present.tif"), overwrite=TRUE)
   
   #pr_mean[pr_mean == 0] <- NA
   pr_sd <- calc(pr_st, sd)
-  writeRaster(pr_sd,  paste0(out_dir, spek[i], "sd_present.tif"), overwrite=TRUE)
+  writeRaster(pr_sd,  paste0(out_dir, spek[i], "_sd_present.tif"), overwrite=TRUE)
   
   ### list 45 files (optimistic)
   d4 <- dir( path = d3.1, pattern = glob2rx("*45_*.gri"), recursive = TRUE)
@@ -48,21 +48,21 @@ foreach(i = spek) %dopar% {
   fut45_st <- stack(paste0(d3.1,"/",d4))
   fut45_mean <- mean(fut45_st)
   fut45_mean[fut45_mean < 510] <- NA
-  writeRaster(fut45_mean,  paste0(out_dir, spek[i], "mean_fut45.tif"), overwrite=TRUE)
+  writeRaster(fut45_mean,  paste0(out_dir, spek[i], "_mean_fut45.tif"), overwrite=TRUE)
   
   #fut45_mean[fut45_mean == 0] <- NA
   fut45_sd <- calc(fut45_st, sd)
-  writeRaster(fut45_sd,  paste0(out_dir, spek[i], "sd45.tif"), overwrite=TRUE)
+  writeRaster(fut45_sd,  paste0(out_dir, spek[i], "_sd45.tif"), overwrite=TRUE)
   ### list 85 files (pessimistic)
   d5 <- dir( path = d3.1, pattern = glob2rx("*85_*.gri"), recursive = TRUE)
   ## stack e media e sd
   fut85_st <- stack(paste0(d3.1,"/",d5))
   fut85_mean <- mean(fut85_st)
   fut85_mean[fut85_mean < 510] <- NA
-  writeRaster(fut85_mean,  paste0(out_dir, spek[i], "mean_fut85.tif"), overwrite=TRUE)
+  writeRaster(fut85_mean,  paste0(out_dir, spek[i], "_mean_fut85.tif"), overwrite=TRUE)
   
   fut85_sd <- calc(fut85_st, sd)
-  writeRaster(fut85_sd,  paste0(out_dir, spek[i], "sd85.tif"), overwrite=TRUE)
+  writeRaster(fut85_sd,  paste0(out_dir, spek[i], "_sd85.tif"), overwrite=TRUE)
   
   ### scenario 45 optimistic, difference future - present
   
@@ -85,8 +85,8 @@ foreach(i = spek) %dopar% {
   # r.max = cellStats(dif_45pres, "max")
   #r.scale45 <- ((dif_45pres - r.min) / (r.max - r.min))
   
-  writeRaster(dif_45pres1, paste0(out_dir, spek[i], "dif45.tif"), overwrite=TRUE)
-  writeRaster(dif_85pres1, paste0(out_dir, spek[i], "dif85.tif"), overwrite=TRUE)
+  writeRaster(dif_45pres1, paste0(out_dir, spek[i], "_dif45.tif"), overwrite=TRUE)
+  writeRaster(dif_85pres1, paste0(out_dir, spek[i], "_dif85.tif"), overwrite=TRUE)
   print(spek[i])
 }
 
