@@ -9,7 +9,7 @@ spek <- sub(pattern = "_", replacement = "\\.", x = as.character(unique(sp$speci
 
 work_dir <- paste0(getwd(), "/models_future/")
 setwd(work_dir)
-out_dir <- paste0(getwd(), "/habitat_model/")  ### cartella dove salva i file, crea cartella bin in wd
+out_dir <- paste0("/home/lv71284/frota/data/", "habitat_model/")  ### cartella dove salva i file, crea cartella bin in wd
 
 geo<- raster("../geology/geology_endemic_dolo_all.tif")  ### load geology file (1,0)
 
