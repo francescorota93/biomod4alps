@@ -55,7 +55,7 @@ foreach(i = seq_along(spek)) %dopar% {
   map <- raster(paste0("../maps/", spek1[i], "_optimistic_sintesi.tif"))
   map[map == 0] <- NA
   fut45_st1 <- mask(fut45_st, map)
-  fut45_mean <- mean(fut45_st)
+  fut45_mean <- mean(fut45_st1)
   #geo1 <- crop(geo, fut45_mean)
   #fut45_mean1 <- mask(fut45_mean, geo1)
   writeRaster(fut45_mean,  paste0(out_dir, spek[i], "_mean_fut45.tif"), overwrite=TRUE)
