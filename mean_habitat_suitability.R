@@ -21,7 +21,7 @@ d3 <- list.files(path = ".", )
 
 registerDoParallel(cores = 8)
 
-foreach(i = seq_along(spek)) %dopar% {
+foreach(i = 1:8) %dopar% {
   
   selected<- sub(pattern = "\\.", replacement = "_", x = spek)
   sp.names<-levels(factor(t[,1]))
