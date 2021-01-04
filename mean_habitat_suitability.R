@@ -6,7 +6,7 @@ library(foreach)
 
 sp<-read.table("endemic_dolo50.txt", sep="\t", h=T) ### load spec occurrence file
 spek <- sub(pattern = "_", replacement = "\\.", x = as.character(unique(sp$species)))
-
+spek1 <- sub(pattern = "_", replacement = "\\_", x = as.character(unique(sp$species)))
 work_dir <- paste0(getwd(), "/models_future/")
 setwd(work_dir)
 out_dir <- paste0("/home/lv71284/frota/data/", "habitat_model/")  ### cartella dove salva i file, crea cartella bin in wd
@@ -35,11 +35,12 @@ foreach(i = seq_along(spek)) %dopar% {
   ##stack e media e sd
   pr_st <- stack(paste0(d3.1,"/",d6))
   pr_mean <- mean(pr_st)
-  geo1 <- crop(geo, pr_mean)
-  pr_mean1 <- mask(pr_mean, geo1)
+  #geo1 <- crop(geo, pr_mean)
+  #pr_mean1 <- mask(pr_mean, geo1)
   #pr_mean[pr_mean < 510] <- NA
-  #map <- raster(paste0("/maps/", spek[i], "_optimistic_sintesi.tif"))
-  #pr_mean1 <- mask(pr_mean, map)
+  map <- raster(paste0("../maps/", spek1[i], "_optimistic_sintesi.tif"))
+  map[map == 0] <- NA
+  pr_mean1 <- mask(pr_mean, map)
   writeRaster(pr_mean1,  paste0(out_dir, spek[i], "_mean_present.tif"), overwrite=TRUE)
   
   #pr_mean[pr_mean == 0] <- NA
@@ -51,23 +52,29 @@ foreach(i = seq_along(spek)) %dopar% {
   ## stack e media e sd
   fut45_st <- stack(paste0(d3.1,"/",d4))
   fut45_mean <- mean(fut45_st)
-  geo1 <- crop(geo, fut45_mean)
-  fut45_mean1 <- mask(fut45_mean, geo1)
-  #map1 <- raster(paste0("/maps/", spek[i], "_optimistic_sintesi.tif"))
-  #fut45_mean1 <- mask(fut45_mean, map)
+  #geo1 <- crop(geo, fut45_mean)
+  #fut45_mean1 <- mask(fut45_mean, geo1)
+  map <- raster(paste0("../maps/", spek1[i], "_optimistic_sintesi.tif"))
+  map[map == 0] <- NA
+  fut45_mean1 <- mask(fut45_mean, map)
   writeRaster(fut45_mean1,  paste0(out_dir, spek[i], "_mean_fut45.tif"), overwrite=TRUE)
   
   #fut45_mean[fut45_mean == 0] <- NA
   #fut45_sd <- calc(fut45_st, sd)
   #writeRaster(fut45_sd,  paste0(out_dir, spek[i], "_sd45.tif"), overwrite=TRUE)
+  
   ### list 85 files (pessimistic)
   d5 <- dir( path = d3.1, pattern = glob2rx("*85_*.gri"), recursive = TRUE)
   ## stack e media e sd
   fut85_st <- stack(paste0(d3.1,"/",d5))
   fut85_mean <- mean(fut85_st)
-  geo1 <- crop(geo, fut85_mean)
+  #geo1 <- crop(geo, fut85_mean)
   fut85_mean1 <- mask(fut85_mean, geo1)
   #fut85_mean[fut85_mean < 510] <- NA
+  map <- raster(paste0("../maps/", spek1[i], "_pessimistic_sintesi.tif"))
+  map[map == 0] <- NA
+  fut85_mean1 <- mask(fut85_mean, map)
+  
   writeRaster(fut85_mean1,  paste0(out_dir, spek[i], "_mean_fut85.tif"), overwrite=TRUE)
   
   #fut85_sd <- calc(fut85_st, sd)
@@ -80,12 +87,12 @@ foreach(i = seq_along(spek)) %dopar% {
   
   ## differenza percentuale
   
-  dif_45pres <- ((fut45_mean1 - pr_mean1)/((fut45_mean1 + pr_mean1)/2))*100
+  dif_45pres <- ((fut45_mean1 - pr_mean1)/((fut45_mean1 + pr_mean1)/2))
   #plot(dif_45pres)
   
   #dif_45pres1 <- mask(dif_45pres, geo)######
   
-  dif_85pres <- ((fut85_mean1 - pr_mean1)/((fut85_mean1 + pr_mean1)/2))*100
+  dif_85pres <- ((fut85_mean1 - pr_mean1)/((fut85_mean1 + pr_mean1)/2))
   #plot(dif_85pres)
   
   #dif_85pres1 <- mask(dif_85pres, geo)  ####
