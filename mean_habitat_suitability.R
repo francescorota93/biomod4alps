@@ -42,7 +42,7 @@ foreach(i = 1:8) %dopar% {
   #pr_mean1 <- mask(pr_mean, geo1)
   #pr_mean[pr_mean < 510] <- NA
   
-  writeRaster(pr_mean1,  paste0(out_dir, spek[i], "_mean_present.tif"), overwrite=TRUE)
+  writeRaster(pr_mean,  paste0(out_dir, spek[i], "_mean_present.tif"), overwrite=TRUE)
   
   #pr_mean[pr_mean == 0] <- NA
   #pr_sd <- calc(pr_st, sd)
