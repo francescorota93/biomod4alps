@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -J build
 #SBATCH -N 1
-#SBATCH --partition=mem_0128
-#SBATCH --qos=normal_0128
+#SBATCH --partition=mem_0256
+#SBATCH --qos=normal_0256
 ##SBATCH --account=lv71284
 ##SBATCH --mail-user=giulio.genova@eurac.edu
 #SBATCH --mail-user=francesco.rota@education.unibz.it

@@ -19,7 +19,7 @@ t <- read.table("../spec_extents.txt", head = TRUE, sep = "\t")
 
 d3 <- list.files(path = ".", )
 
-registerDoParallel(cores = 8)
+registerDoParallel(cores = 4)
 
 foreach(i = 1:8) %dopar% {
   
