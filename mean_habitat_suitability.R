@@ -43,7 +43,7 @@ foreach(i = 1:8, .errorhandling = "pass") %dopar% {
   #pr_mean[pr_mean < 510] <- NA
   
   writeRaster(pr_mean,  paste0(out_dir, spek[i], "_mean_present.tif"), overwrite=TRUE)
-  
+  print(spek[i])
   #pr_mean[pr_mean == 0] <- NA
   #pr_sd <- calc(pr_st, sd)
   #writeRaster(pr_sd,  paste0(out_dir, spek[i], "_sd_present.tif"), overwrite=TRUE)
@@ -59,7 +59,7 @@ foreach(i = 1:8, .errorhandling = "pass") %dopar% {
   #geo1 <- crop(geo, fut45_mean)
   #fut45_mean1 <- mask(fut45_mean, geo1)
   writeRaster(fut45_mean,  paste0(out_dir, spek[i], "_mean_fut45.tif"), overwrite=TRUE)
-  
+  print(spek[i])
   #fut45_mean[fut45_mean == 0] <- NA
   #fut45_sd <- calc(fut45_st, sd)
   #writeRaster(fut45_sd,  paste0(out_dir, spek[i], "_sd45.tif"), overwrite=TRUE)
@@ -72,8 +72,8 @@ foreach(i = 1:8, .errorhandling = "pass") %dopar% {
   map[map == 0] <- NA
   fut85_st1 <- mask(fut85_st, map)
   fut85_mean <- mean(fut85_st1)
-  
   writeRaster(fut85_mean,  paste0(out_dir, spek[i], "_mean_fut85.tif"), overwrite=TRUE)
+  print(spek[i])
   
   #fut85_sd <- calc(fut85_st, sd)
   #writeRaster(fut85_sd,  paste0(out_dir, spek[i], "_sd85.tif"), overwrite=TRUE)
