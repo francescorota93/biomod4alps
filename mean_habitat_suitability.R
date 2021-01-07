@@ -22,6 +22,8 @@ d3 <- list.files(path = ".", )
 registerDoParallel(cores = 4)
 
 foreach(i = 1:8, .errorhandling = "pass") %dopar% {
+  tryCatch(
+    {
   
   selected<- sub(pattern = "\\.", replacement = "_", x = spek)
   sp.names<-levels(factor(t[,1]))
@@ -102,6 +104,13 @@ foreach(i = 1:8, .errorhandling = "pass") %dopar% {
   writeRaster(dif_45pres, paste0(out_dir, spek[i], "_dif45.tif"), overwrite=TRUE)
   writeRaster(dif_85pres, paste0(out_dir, spek[i], "_dif85.tif"), overwrite=TRUE)
   print(spek[i])
+  
+},
+error=function(cond) {
+  message(cond)
+  return(traceback())
+})
 }
+
 
 
