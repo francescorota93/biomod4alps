@@ -19,9 +19,11 @@ t <- read.table("../spec_extents.txt", head = TRUE, sep = "\t")
 
 d3 <- list.files(path = ".", )
 
-registerDoParallel(cores = 4)
+#registerDoParallel(cores = 4)
+## try for one species
+i = 2
 
-foreach(i = 1:8, .errorhandling = "pass") %dopar% {
+#foreach(i = 1:8, .errorhandling = "pass") %dopar% {
   tryCatch(
     {
   
@@ -110,7 +112,7 @@ error=function(cond) {
   message(cond)
   return(traceback())
 })
-}
+#}
 
 
 
