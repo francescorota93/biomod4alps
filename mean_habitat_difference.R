@@ -25,6 +25,6 @@ dif_45pres <- ((fut45_mean - pr_mean)/((fut45_mean + pr_mean)/2))
 dif_85pres <- ((fut85_mean - pr_mean)/((fut85_mean + pr_mean)/2))
 #plot(dif_85pres)
 
-writeRaster(dif_45pres, paste0(out_dir, spek[i], "_dif45.tif"), overwrite=TRUE)
-writeRaster(dif_85pres, paste0(out_dir, spek[i], "_dif85.tif"), overwrite=TRUE)
+writeRaster(dif_45pres, paste0(work_dir, spek[i], "_dif45.tif"), overwrite=TRUE)
+writeRaster(dif_85pres, paste0(work_dir, spek[i], "_dif85.tif"), overwrite=TRUE)
 }
