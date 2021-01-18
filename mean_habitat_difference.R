@@ -14,7 +14,7 @@ registerDoParallel(cores = 8)
 ## try for one species
 
 
-foreach(i = 1:8, .errorhandling = "pass") %dopar% {
+foreach(i = 1:8) %dopar% {
 
 # differenza percentuale
 pr_mean <- raster(paste0(spek[i], "_mean_present.tif"))
