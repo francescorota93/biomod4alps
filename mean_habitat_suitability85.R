@@ -75,17 +75,17 @@ tryCatch(
     map <- raster(paste0("../maps/", spek1[i], "_pessimistic_sintesi.tif"))
     map[map == 0] <- NA
     print(map)
-    fut85_st1 <- mask(fut85_st, map)
-    print(fut85_st1)
-    fut85_mean <- mean(fut85_st1)
+    fut85_mean <- mean(fut85_st)
     print(fut85_mean)
-    writeRaster(fut85_mean,  paste0(out_dir, spek[i], "_mean_fut85.tif"), overwrite=TRUE)
+    fut85_st1 <- mask(fut85_mean, map)
+    print(fut85_st1)
+    
+    writeRaster(fut85_st1,  paste0(out_dir, spek[i], "_mean_fut85.tif"), overwrite=TRUE)
     print(spek[i])
 
-    fut85_sd <- calc(fut85_st1, sd)
-    print(fut85_sd)
-    
-    writeRaster(fut85_sd,  paste0(out_dir, spek[i], "_sd85.tif"), overwrite=TRUE)
+    # fut85_sd <- calc(fut85_st1, sd)
+    # print(fut85_sd)
+    # writeRaster(fut85_sd,  paste0(out_dir, spek[i], "_sd85.tif"), overwrite=TRUE)
 
     # ### scenario 45 optimistic, difference future - present
     # 
