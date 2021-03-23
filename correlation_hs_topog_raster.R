@@ -14,7 +14,9 @@ library(permutations)
 library(PMCMRplus)
 library(forcats)
 library(spatialEco)
-
+library(ggplot2)
+library(multcompView)
+library(rcompanion)
 ## calculate topographic heterogeneity
 ## add elevation slope eastness northness and PC1 and PC2 topo al df_habitat_velocity
 ## fai df con aree parco aggiunte
@@ -73,35 +75,15 @@ writeRaster(st2, paste0("habitat_topohetero_models/",spec1[i],"_stack_habitat_ca
 }       
 
 
-# read rasters
-for(i in seq_along(spec1)){}
-srtm <- stack(paste0("habitat_topohetero_models/",spec1[i],"_stack_habitat_category.tif"))
-names(srtm) <- c("logSpeed_45","logSpeed_85", "elev", "TRI", "TCI","habitat_opt_50", "habitat_pes_50", "habitat_opt_100", "habitat_pes_100")
-
-r1 <- srtm[[5]] # elev temperature (nel caso tuo topographic complexity raster / o climatic velocity??)
-r2 <- as.factor(srtm[[6]]) # habitat_opt elevation (nel caso tuo habitat suitabilitiy raster)
-
-r1 <- srtm[[3]] # elev temperature (nel caso tuo topographic complexity raster / o climatic velocity??)
-r2 <- srtm[[4]] # tri elevation (nel caso tuo habitat suitabilitiy raster)
-
-r1 <- srtm[[1]] # climate_vel temperature (nel caso tuo topographic complexity raster / o climatic velocity??)
-r2 <- srtm[[3]] # elev
-#relazione tra le due:
-plot(getValues(r2) ~ getValues(r1),pch='.', main="tci vs hs_opt")
-#boxplot(getValues(r2) ~ getValues(r1), main="tci vs hs_opt_50")
-
-### ### Pairwise Mann-Whitney
-#p <- test$p.value
-
-### Note that the values in the table are p-values comparing each
-###   pair of groups.
-library(ggplot2)
-library(multcompView)
-library(rcompanion)
+############################################
+### GIULIO CHECK FROM HERE. il ciclo for se lo fai andare a mano con i = 1 funziona,
+#### se lo fai partire tutto insieme si pianta
+### inizialmente avevo anche aggiunto la parte statistica di multicomp letters che trovi infondo allo script
+#############################################
 ## trasform stack in df
 spec1 <- c("Campanula_morettiana", "Festuca_austrodolomitica", "Gentiana_brentae", "Nigritella_buschmanniae",
              "Primula_tyrolensis", "Rhizobotrya_alpina", "Saxifraga_facchinii", "Sempervivum_dolomiticum")
-#for(i in seq_along(spec1)){
+
 for(i in 1:8){
 srtm <- stack(paste0("habitat_topohetero_models/",spec1[i],"_stack_habitat_category.tif"))
 names(srtm) <- c("CCV_45", "CCV_85", "elev",  "TRI",   "TCI",
@@ -305,10 +287,14 @@ p + geom_bar(stat = "identity", position = dodge) +
   
 ggsave(paste0("habitat_topohetero_models/graphs/",spec1[i],"_habitat_pes_100.pdf"))
 
-}
+
 
 #############################
 ##### other for loop
+## Note that the values in the table are p-values comparing each
+###   pair of groups.
+### Pairwise Mann-Whitney
+#p <- test$p.value
 # statistical test ## wilkoxon 
 test <- pairwise.wilcox.test(b$elev, factor(b$habitat_opt_50), p.adj = "bonf")
 PT = test$p.value    ### Extract p-value table
