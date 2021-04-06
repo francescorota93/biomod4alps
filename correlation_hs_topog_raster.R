@@ -75,10 +75,7 @@ writeRaster(st2, paste0("habitat_topohetero_models/",spec1[i],"_stack_habitat_ca
 }       
 
 
-############################################
-### GIULIO CHECK FROM HERE. il ciclo for se lo fai andare a mano con i = 1 funziona,
-#### se lo fai partire tutto insieme si pianta
-### inizialmente avevo anche aggiunto la parte statistica di multicomp letters che trovi infondo allo script
+
 #############################################
 ## trasform stack in df
 spec1 <- c("Campanula_morettiana", "Festuca_austrodolomitica", "Gentiana_brentae", "Nigritella_buschmanniae",
@@ -91,12 +88,20 @@ names(srtm) <- c("CCV_45", "CCV_85", "elev",  "TRI",   "TCI",
 b <- as.data.frame(srtm, na.rm =TRUE)
 names(b) <- c("CCV_45", "CCV_85", "elev",  "TRI",   "TCI",
          "habitat_opt_50",  "habitat_pes_50", "habitat_opt_100", "habitat_pes_100")
+
+cols <- c("habitat_opt_50",  "habitat_pes_50", "habitat_opt_100", "habitat_pes_100")
+b[cols] <- lapply(b[cols], factor)
+b1 <- subset(b, habitat_opt_50!="0")
+b1<- droplevels(b1)
+### dividi per ottimistico e pessimistico e fai due cicli for
 ## OPTIMISTIC
+for(i in 6:9){
+
 ## df means and sd for opt_50
-a_elev <- aggregate(elev ~ habitat_opt_50, data=b, function(x) c(mean = mean(x), sd = sd(x)))
-a_tci <- aggregate(TCI ~ habitat_opt_50, data=b, function(x) c(mean = mean(x), sd = sd(x)))
-a_tri <- aggregate(TRI ~ habitat_opt_50, data=b, function(x) c(mean = mean(x), sd = sd(x)))
-a_ccv <- aggregate(CCV_45 ~ habitat_opt_50, data=b, function(x) c(mean = mean(x), sd = sd(x)))
+a_elev <- aggregate(elev ~ habitat_opt_50, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
+a_tci <- aggregate(TCI ~ habitat_opt_50, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
+a_tri <- aggregate(TRI ~ habitat_opt_50, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
+a_ccv <- aggregate(CCV_45 ~ habitat_opt_50, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
 a <- cbind(a_elev$habitat_opt_50, a_elev$elev[,1:2], a_tci$TCI[,1:2],a_tri$TRI[,1:2], a_ccv$CCV_45[,1:2])
 df <- as.data.frame(a)
 names(df) <- c("habitat_opt_50", "elev.mean", "elev.sd",  "TCI.mean",   "TCI.sd",
@@ -126,25 +131,33 @@ data_df1 <- data.frame(x = df[,1],                            # Reshape data fra
                                  #rep("CCV_45.mean", nrow(df))))#,
                                  rep("CCV_45.sd", nrow(df))))
 
+
+
+
 limits <- aes(ymax = data_df$y + data_df1$y,
             ymin = data_df$y - data_df1$y)
+
+### species~group, and adapt limits
 p <- ggplot(data = data_df, aes(x = as.factor(x), y = y), fill = x)
 p + geom_bar(stat = "identity", position = dodge) +
   geom_errorbar(limits, position = dodge, width = 0.25) + 
   labs(x = spec1[i], y = NULL) +
   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
         axis.title.x=element_blank(), legend.position="none") +
-  facet_wrap(~group, scales="free")+
-  scale_x_discrete(labels = c("NS", "Loss", "Gain", "Stable"))+
+  facet_wrap(~group, scales="free", ncol=4)+
+  scale_x_discrete(labels = c("Loss", "Gain", "Stable"))+
   theme_bw() 
   
 ggsave(paste0("habitat_topohetero_models/graphs/",spec1[i],"_habitat_opt_50.pdf"))
 
+############### keep total consensus at 100 ##### run per tutte le specie
 ## df means and sd for opt_100
-a_elev <- aggregate(elev ~ habitat_opt_100, data=b, function(x) c(mean = mean(x), sd = sd(x)))
-a_tci <- aggregate(TCI ~ habitat_opt_100, data=b, function(x) c(mean = mean(x), sd = sd(x)))
-a_tri <- aggregate(TRI ~ habitat_opt_100, data=b, function(x) c(mean = mean(x), sd = sd(x)))
-a_ccv <- aggregate(CCV_45 ~ habitat_opt_100, data=b, function(x) c(mean = mean(x), sd = sd(x)))
+b1 <- subset(b, habitat_opt_100!="0")
+b1<- droplevels(b1)
+a_elev <- aggregate(elev ~ habitat_opt_100, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
+a_tci <- aggregate(TCI ~ habitat_opt_100, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
+a_tri <- aggregate(TRI ~ habitat_opt_100, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
+a_ccv <- aggregate(CCV_45 ~ habitat_opt_100, data=b1, function(x) c(mean = mean(x), sd = sd(x)))
 a <- cbind(a_elev$habitat_opt_100, a_elev$elev[,1:2], a_tci$TCI[,1:2],a_tri$TRI[,1:2], a_ccv$CCV_45[,1:2])
 df <- as.data.frame(a)
 names(df) <- c("habitat_opt_100", "elev.mean", "elev.sd",  "TCI.mean",   "TCI.sd",
@@ -181,15 +194,16 @@ p + geom_bar(stat = "identity", position = dodge) +
   geom_errorbar(limits, position = dodge, width = 0.25) + 
   labs(x = spec1[i], y = NULL) +
   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
-        axis.title.x=element_blank(), legend.position="none") +
-  facet_wrap(~group, scales="free")+
-  scale_x_discrete(labels = c("NS", "Loss", "Gain", "Stable"))+
+        axis.title.x=element_blank(), legend.position="none", vjust = 0.5, hjust=1) +
+  facet_wrap(~group, scales="free", ncol=4)+
+  scale_x_discrete(labels = c("Loss", "Gain", "Stable"))+
   theme_bw() 
   
 ggsave(paste0("habitat_topohetero_models/graphs/",spec1[i],"_habitat_opt_100.pdf"))
 
-}
+#}
 
+## altro ciclo for
 ## PESSIMISTIC -----------
 ## df means and sd for pes_50
 a_elev <- aggregate(elev ~ habitat_pes_50, data=b, function(x) c(mean = mean(x), sd = sd(x)))
@@ -296,9 +310,11 @@ ggsave(paste0("habitat_topohetero_models/graphs/",spec1[i],"_habitat_pes_100.pdf
 ### Pairwise Mann-Whitney
 #p <- test$p.value
 # statistical test ## wilkoxon 
-test <- pairwise.wilcox.test(b$elev, factor(b$habitat_opt_50), p.adj = "bonf")
+test <- pairwise.wilcox.test(b1$CCV_45, factor(b1$habitat_opt_100), p.adj = "bonf")
 PT = test$p.value    ### Extract p-value table
 PT1 = fullPTable(PT)
+write.table(PT1,file = paste0("habitat_topohetero_models/graphs/p_values_",spec1[i],"_habitat_opt_100.txt"), sep = "\t",
+            row.names = FALSE)
 #PT1
 ### Produce compact letter display
 let <- multcompLetters(PT1,
@@ -307,5 +323,5 @@ let <- multcompLetters(PT1,
 								Letters=letters,
 								reversed = FALSE)
 let1 <- as.data.frame(print(let))
-write.table(let1, file = paste0("habitat_topohetero_models/graphs/letters_",spec1[i],"_habitat_opt_50.txt"), sep = "\t",
+write.table(let1, file = paste0("habitat_topohetero_models/graphs/letters_",spec1[i],"_habitat_opt_100.txt"), sep = "\t",
             row.names = FALSE)
