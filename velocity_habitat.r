@@ -30,10 +30,10 @@ TCI[TCI == NA] <- 0
 tci1 <- setExtent(TCI, extent(dem), keepres=T)
 ### https://www.rdocumentation.org/packages/spatialEco/versions/1.3-2/topics/tri
 library(spatialEco)
-a <- tri(dem1, s=c(3,3), exact = T)
-names(a) <- "TRI"
-writeRaster(a, filename = "env_predictors/TRI.tif")
-
+# a <- tri(dem1, s=c(3,3), exact = T)
+# names(a) <- "TRI"
+# writeRaster(a, filename = "env_predictors/TRI.tif")
+a <- raster("env_predictors/TRI.tif")
 st <- stack(dem, a, tci1)
 # heterogeneity_df <- as.data.frame(st, xy = T, na.rm = T)
 
@@ -47,7 +47,8 @@ velocity85 <- raster("results_climate_change_velocity/future/logSpeed_85.tif")
 st1 <- crop(st, velocity45)
 velocity_all <- stack(velocity45, velocity85, st1)
 df_habitat_velocity_100cons <- data.frame(x = NA, y = NA, logSpeed_45 = NA, logSpeed_85 = NA, elev = NA, TRI = NA, TCI = NA, habitat_opt = NA, habitat_pes = NA, species = NA)
-### df_habita_velocity for 100% consensus models continuos hs
+
+### df_habita_velocity for 100% consensus models continuos hs differenza percentuale
 for(i in seq_along(spec)){
 map45 <- raster(paste0("habitat_model/habitat_model/",spec[i],"_dif45.tif"))
 map85 <- raster(paste0("habitat_model/habitat_model/",spec[i],"_dif85.tif"))
@@ -66,6 +67,30 @@ assign("df_habitat_velocity_100cons", bind_rows(df_habitat_velocity_100cons, df_
 
 #head(df_spec)
 write.csv(df_habitat_velocity_100cons, "results_climate_change_velocity/df_habitat_velocity_100cons.csv")
+
+### df_habita_velocity for 100% consensus models continuos hs differenza percentuale
+df_habitat_velocity_100cons_int <- data.frame(x = NA, y = NA, logSpeed_45 = NA, logSpeed_85 = NA, elev = NA, TRI = NA, TCI = NA, habitat_opt = NA, habitat_pes = NA, species = NA)
+for(i in seq_along(spec)){
+  map45 <- raster(paste0("habitat_model/",spec[i],"_dif45_int.tif"))
+  map85 <- raster(paste0("habitat_model/",spec[i],"_dif85_int.tif"))
+  map <- stack(map45, map85)
+  
+  df <-crop(velocity_all, map)
+  st <- stack(df, map)
+  df_spec <- as.data.frame(st, xy = T, rownames = T, na.rm = T)
+  df_spec$species <- spec[i]
+  names(df_spec) <- c("x", "y", "logSpeed_45","logSpeed_85", "elev", "TRI", "TCI","habitat_opt", "habitat_pes", "species")
+  
+  assign("df_habitat_velocity_100cons_int", bind_rows(df_habitat_velocity_100cons_int, df_spec))
+  
+}       
+
+#head(df_spec)
+write.csv(df_habitat_velocity_100cons_int, "results_climate_change_velocity/df_habitat_velocity_100cons_int.csv")
+
+
+
+
 
 ### load df habitat velocity
 df_habitat_velocity <- read.csv("/data/models/results_climate_change_velocity/df_habitat_velocity_100cons.csv")
