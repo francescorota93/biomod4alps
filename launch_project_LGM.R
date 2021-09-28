@@ -19,7 +19,7 @@ if(interactive()){
   p <- add_argument(parser = p, arg = "--outdir", help="directory to sotore output relative to workdir",
                     default = "/models_future")
   p <- add_argument(parser = p, arg = "--user", help="which user is running the job", default = "frota")
-  p <- add_argument(parser = p, arg = "--temprastdir", help="dir where to create temprastdir, default global", default = "/global/lv71284/frota/temp_rast_dir")
+  p <- add_argument(parser = p, arg = "--temprastdir", help="dir where to create temprastdir, default global", default = "/home/lv71284/frota/temp_rast_dir/")
   
   # Parse the command line arguments
   argv <- parse_args(p)
