@@ -1,11 +1,10 @@
 #!/bin/bash
 #SBATCH -J build
 #SBATCH -N 1
-#SBATCH --partition=mem_0064
-#SBATCH --qos=normal_0064
-##SBATCH --account=lv71284
-##SBATCH --mail-user=giulio.genova@eurac.edu
-#SBATCH --mail-user=francesco.rota@education.unibz.it
+#SBATCH --partition=vsc3plus_0064
+#SBATCH --qos=vsc3plus_0064
+##SBATCH --account=lv71418
+#SBATCH --mail-user=francesco.rota@unibz.it
 #SBATCH --mail-type=BEGIN,END
 ##SBATCH --time-min=3
 

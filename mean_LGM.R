@@ -1,4 +1,4 @@
-mean <- function(spek, sp, t, work_dir, out_dir)
+mean_lgm <- function(spek, sp, t, work_dir, out_dir)
 {
   setwd(work_dir)
   d<-dir(".", full.names=T, pattern = spek)
