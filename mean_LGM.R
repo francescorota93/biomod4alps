@@ -1,4 +1,4 @@
-mean <- function(spek, sp, t, work_dir, out_dir)
+mean_lgm <- function(spek, sp, t, work_dir, out_dir)
 {
   setwd(work_dir)
   d<-dir(".", full.names=T, pattern = spek)
@@ -15,8 +15,9 @@ mean <- function(spek, sp, t, work_dir, out_dir)
     print(d[i])
     setwd(d[i])
     d2<-dir(".", full.names=T, pattern= "proj_")
-    sc<-mean(stack(dir(d2, full.names=T, pattern = "*\\.gri")))/1000
-    sd1<-sd(stack(dir(d2, full.names=T, pattern = "*\\.gri")))/1000
+    s <- stack(dir(d2, full.names=T, pattern = "*\\.gri"))/1000
+    sc<-calc(s, fun = mean)
+    sd1<-calc(s, fun = sd)    
     
     st2<-unlist(strsplit(dir(".", full.names=T)[2], "[.]"))
     st3<-unlist(strsplit(st2[2], "/"))
