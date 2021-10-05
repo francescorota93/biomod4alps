@@ -1,4 +1,4 @@
-setwd("/home/lv71418/frota/data/") ###setwd("/home/lv71284/frota/data/")
+setwd("/home/lv71418/frrota/data/") ###setwd("/home/lv71284/frota/data/")
 library(raster)
 library(PresenceAbsence)
 source("biomod4alps/mean_LGM.R")
