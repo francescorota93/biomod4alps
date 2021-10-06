@@ -21,8 +21,8 @@ mean_lgm <- function(spek, sp, t, work_dir, out_dir)
     
     st2<-unlist(strsplit(dir(".", full.names=T)[2], "[.]"))
     st3<-unlist(strsplit(st2[2], "/"))
-    name1<-paste0(st3[2],"_",st2[3],"_",st2[4],"_mean.tif")
-    name2<-paste0(st3[2],"_",st2[3],"_",st2[4],"_sd.tif")
+    name1<-paste0(substring(d[i],3,),"_",st3[2],"_mean.tif")
+    name2<-paste0(substring(d[i],3,),"_",st3[2],"_sd.tif")
 
       #geo <- crop(geo, t2)
       
