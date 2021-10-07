@@ -7,7 +7,6 @@ source("biomod4alps/mean_LGM.R")
 ####################################
 sp<-read.table("endemic_dolo50.txt", sep="\t", h=T) ### load spec occurrence file
 spek <- sub(pattern = "_", replacement = "\\.", x = as.character(unique(sp$species)))
-spek<-spek[c(1,5,6,7)]
 work_dir <- paste0(getwd(), "/models_LGM/")
 print(paste0("the work dir is ", work_dir))
 out_dir <- paste0(getwd(), "/mean_LGM/")  ### cartella dove salva i file, crea cartella bin in wd
