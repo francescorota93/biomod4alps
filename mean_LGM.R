@@ -29,7 +29,6 @@ mean_lgm <- function(spek, sp, t, work_dir, out_dir)
       writeRaster(sc, paste0(out_dir, name1), overwrite=TRUE)
       writeRaster(sd1, paste0(out_dir, name2), overwrite=TRUE)
     
-    setwd("..")
     print(spek)
   }
   return(spek)
