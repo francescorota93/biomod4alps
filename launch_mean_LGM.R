@@ -1,6 +1,6 @@
 setwd("/home/lv71418/frrota/data/") ###setwd("/home/lv71284/frota/data/")
 library(raster)
-library(foreach)
+#library(foreach)
 #library(terra)
 #library(PresenceAbsence)
 source("biomod4alps/mean_LGM.R")
@@ -21,5 +21,5 @@ t <- read.table("spec_extents.txt", head = TRUE, sep = "\t")
 
 ### made loop for each species
 
-#lapply(spek, mean_lgm, sp=sp, t=t, work_dir=work_dir, out_dir=out_dir)
-foreach(1:4) %dopar% mean_lgm(spek, sp=sp, t=t, work_dir=work_dir, out_dir=out_dir)
+lapply(spek, mean_lgm, sp=sp, t=t, work_dir=work_dir, out_dir=out_dir)
+#foreach(1:4) %dopar% mean_lgm(spek, sp=sp, t=t, work_dir=work_dir, out_dir=out_dir)
