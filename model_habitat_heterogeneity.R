@@ -25,6 +25,7 @@ df_habitat_velocity <- read.csv("/data/models/results_climate_change_velocity/df
 # # ## remove NA from habitats
 # df_habitat_velocity <- df_habitat_velocity[!(df_habitat_velocity$habitat_opt == 0 | df_habitat_velocity$habitat_pes == 0),]
 df_habitat_velocity <- na.omit(df_habitat_velocity)
+str(df_habitat_velocity)
 # df_habitat_velocity$habitat_opt <- factor(df_habitat_velocity$habitat_opt)
 # df_habitat_velocity$habitat_pes <- factor(df_habitat_velocity$habitat_pes)
 spec <- c("Campanula.morettiana", "Festuca.austrodolomitica", "Gentiana.brentae", "Nigritella.buschmanniae",
