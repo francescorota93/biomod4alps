@@ -16,13 +16,13 @@ mean_lgm <- function(spek, sp, t, work_dir, out_dir)
     setwd(d[i])
     d2<-dir(".", full.names=T, pattern= "proj_")
     s <- stack(dir(d2, full.names=T, pattern = "*\\.gri"))/1000
-    sc<-calc(s, fun = mean)
-    sd1<-calc(s, fun = sd)    
+    sc<-calc(s, fun = mean, na.rm = TRUE)
+    sd1<-calc(s, fun = sd, na.rm = TRUE)    
     
     st2<-unlist(strsplit(dir(".", full.names=T)[2], "[.]"))
     st3<-unlist(strsplit(st2[2], "/"))
-    name1<-paste0(st3[2],"_",st2[3],"_",st2[4],"_mean.tif")
-    name2<-paste0(st3[2],"_",st2[3],"_",st2[4],"_sd.tif")
+    name1<-paste0(substring(d[i],3,),"_mean.tif")
+    name2<-paste0(substring(d[i],3,),"_sd.tif")
 
       #geo <- crop(geo, t2)
       
@@ -30,7 +30,8 @@ mean_lgm <- function(spek, sp, t, work_dir, out_dir)
       writeRaster(sd1, paste0(out_dir, name2), overwrite=TRUE)
     
     setwd("..")
+    print(spek)
   }
   return(spek)
-  rm(list=ls())
+  #rm(list=ls())
 }
