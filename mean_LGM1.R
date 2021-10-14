@@ -16,7 +16,7 @@ s_mean<-list.files(path= ".", pattern="*\\mean", recursive=F, full.names= TRUE)
 registerDoParallel(cl <- makeCluster(4))
 foreach(i = 1:length(spek), .packages = "raster") %dopar% {
 #i=1
- s_mean[grepl(spek[i], s_mean)]
+ s_mean<-s_mean[grepl(spek[i], s_mean)]
  #s_sd[grepl(spek[i], s_sd)]
  print(s_mean)
  s1<-stack(s_mean)
@@ -28,7 +28,7 @@ foreach(i = 1:length(spek), .packages = "raster") %dopar% {
 
  writeRaster(sc, paste0(out_dir, name1), overwrite=TRUE)
  writeRaster(sd1, paste0(out_dir, name2), overwrite=TRUE)
- setwd("..")
+
 
  }
 
